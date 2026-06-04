@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1254 1254" role="img" aria-label="FVoice logo">
+  <defs>
+    <linearGradient id="blue" x1="240" y1="1030" x2="1000" y2="180" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0c62e8"/>
+      <stop offset="0.55" stop-color="#0869e7"/>
+      <stop offset="1" stop-color="#1474f1"/>
+    </linearGradient>
+    <linearGradient id="teal" x1="140" y1="830" x2="950" y2="390" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#09a99c"/>
+      <stop offset="1" stop-color="#12aa9c"/>
+    </linearGradient>
+    <linearGradient id="mic" x1="545" y1="850" x2="690" y2="420" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0c62e8"/>
+      <stop offset="1" stop-color="#116ee9"/>
+    </linearGradient>
+    <filter id="softShadow" x="-8%" y="-8%" width="116%" height="116%">
+      <feDropShadow dx="0" dy="7" stdDeviation="10" flood-color="#0d5edb" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <rect width="1254" height="1254" rx="150" fill="#fbfaf9"/>
+
+  <g filter="url(#softShadow)">
+    <path
+      d="M217 506
+         A432 432 0 0 1 626 177
+         A432 432 0 0 1 1058 609
+         A432 432 0 0 1 717 1030
+         C672 1071 624 1101 528 1162
+         L534 1055
+         A432 432 0 0 1 218 760"
+      fill="none"
+      stroke="url(#blue)"
+      stroke-width="52"
+      stroke-linecap="round"
+      stroke-linejoin="round"/>
+
+    <g fill="url(#teal)">
+      <rect x="113" y="601" width="27" height="56" rx="13.5"/>
+      <rect x="155" y="502" width="28" height="222" rx="14"/>
+      <rect x="201" y="562" width="29" height="135" rx="14.5"/>
+      <rect x="260" y="556" width="29" height="147" rx="14.5"/>
+      <rect x="305" y="508" width="29" height="245" rx="14.5"/>
+      <rect x="351" y="431" width="29" height="348" rx="14.5"/>
+      <rect x="397" y="508" width="28" height="226" rx="14"/>
+      <rect x="438" y="572" width="24" height="121" rx="12"/>
+      <rect x="477" y="597" width="22" height="60" rx="11"/>
+
+      <rect x="765" y="475" width="193" height="27" rx="13.5"/>
+      <rect x="765" y="545" width="227" height="27" rx="13.5"/>
+      <rect x="765" y="615" width="227" height="27" rx="13.5"/>
+      <rect x="765" y="682" width="210" height="27" rx="13.5"/>
+      <rect x="765" y="749" width="167" height="27" rx="13.5"/>
+      <rect x="765" y="816" width="82" height="27" rx="13.5"/>
+
+      <circle cx="126" cy="554" r="10"/>
+      <circle cx="141" cy="461" r="12"/>
+      <circle cx="151" cy="779" r="11"/>
+      <circle cx="187" cy="410" r="11"/>
+      <circle cx="186" cy="839" r="10"/>
+      <circle cx="126" cy="712" r="9"/>
+      <circle cx="275" cy="510" r="10"/>
+      <circle cx="276" cy="755" r="10"/>
+      <circle cx="315" cy="445" r="9"/>
+      <circle cx="315" cy="813" r="9"/>
+      <circle cx="370" cy="384" r="10"/>
+      <circle cx="370" cy="855" r="10"/>
+      <circle cx="431" cy="423" r="12"/>
+      <circle cx="430" cy="813" r="12"/>
+      <circle cx="450" cy="513" r="11"/>
+      <circle cx="450" cy="743" r="10"/>
+      <circle cx="488" cy="539" r="10"/>
+      <circle cx="488" cy="704" r="10"/>
+      <circle cx="496" cy="477" r="10"/>
+      <circle cx="492" cy="758" r="9"/>
+    </g>
+
+    <g stroke="url(#blue)" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="551" y="414" width="150" height="307" rx="75" fill="url(#mic)" stroke="none"/>
+      <path d="M521 607 V648 A105 105 0 0 0 731 648 V607" fill="none" stroke-width="22"/>
+      <path d="M626 756 V833" fill="none" stroke-width="24"/>
+      <path d="M575 843 H677" fill="none" stroke-width="28"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">FVoice</string>
+
+    <string name="nav_home">Home</string>
+    <string name="nav_tasks">Tasks</string>
+    <string name="nav_transcript">Transcript</string>
+    <string name="nav_settings">Settings</string>
+
+    <string name="home_subtitle">Audio/Video Denoise &amp; Transcription</string>
+    <string name="home_start_process">Start Processing</string>
+    <string name="home_start_desc">Import audio or video to denoise, transcribe and export.</string>
+    <string name="home_import_audio">Import Audio</string>
+    <string name="import_audio_summary">Pick a recording, podcast or local audio file</string>
+    <string name="home_import_video">Import Video</string>
+    <string name="import_video_summary">Extract the soundtrack and continue processing</string>
+    <string name="home_recent_tasks">Recent Tasks</string>
+    <string name="permission_section">Permissions</string>
+    <string name="permission_ready">Core permissions are ready for file processing and live recording.</string>
+    <string name="permission_missing">Grant missing permissions first to avoid background processing or export failures.</string>
+    <string name="permission_storage">Storage Access</string>
+    <string name="permission_notification">Notifications</string>
+    <string name="permission_microphone">Microphone</string>
+    <string name="permission_battery">Battery Whitelist</string>
+    <string name="permission_overlay">Overlay</string>
+    <string name="permission_granted">Granted</string>
+    <string name="permission_required">Required</string>
+    <string name="permission_optional">Optional</string>
+    <string name="permission_action_required">Action Required</string>
+    <string name="permission_grant_action">Grant</string>
+    <string name="permission_status_ready_title">Permissions Ready</string>
+    <string name="permission_status_missing_title">Permissions Required</string>
+
+    <string name="task_subtitle">Manage processing history and queue</string>
+    <string name="task_search_hint">Search file name or content</string>
+    <string name="task_filter_title">Task Filter</string>
+    <string name="filter_all">All</string>
+    <string name="filter_processing">Processing</string>
+    <string name="filter_completed">Completed</string>
+    <string name="completion_time">Completed</string>
+
+    <string name="transcript_subtitle">Manage transcripts, subtitles and summaries</string>
+    <string name="transcript_search_hint">Search transcript content</string>
+    <string name="transcript_filter_title">Transcript Filter</string>
+
+    <string name="settings_subtitle">App preferences, model management and feedback</string>
+    <string name="settings_check_update">Check Update</string>
+    <string name="settings_check_update_auto">Auto check</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_ui_mode">UI Style</string>
+    <string name="settings_ui_mode_summary">Choose the interface style.</string>
+    <string name="settings_theme">Theme Settings</string>
+    <string name="settings_export_config">Export Configuration</string>
+    <string name="settings_import_config">Import Configuration</string>
+    <string name="settings_config_summary">Configuration backup flow based on MAA-Meow</string>
+    <string name="settings_denoise_model">Denoise Model</string>
+    <string name="settings_transcribe_model">Transcribe Model</string>
+    <string name="settings_send_logs">Send Logs</string>
+    <string name="save_log">Save Log</string>
+    <string name="send_log">Send Log</string>
+    <string name="log_saved">Log saved</string>
+    <string name="settings_about">About</string>
+    <string name="settings_version_license">Version &amp; License</string>
+    <string name="about_version">Version</string>
+    <string name="about_license">Open Source Licenses</string>
+    <string name="about_license_summary">View dependencies and license information</string>
+    <string name="about_source_code_title">View Source Code</string>
+    <string name="about_source_code_summary">View the source, report issues, or contribute improvements</string>
+    <string name="about_qq_channel_title">Join QQ Channel</string>
+    <string name="about_qq_channel_summary">Join for updates, feedback, and community discussion</string>
+
+    <string name="language_follow_system">Follow System</string>
+    <string name="language_chinese">Chinese</string>
+    <string name="language_english">English</string>
+    <string name="language_chinese_english">Chinese/English</string>
+
+    <string name="theme_settings_title">Theme Settings</string>
+    <string name="theme_follow_system">Follow System</string>
+    <string name="color_mode">Color Mode</string>
+    <string name="mode_system">Follow System</string>
+    <string name="mode_light">Light</string>
+    <string name="mode_dark">Dark</string>
+    <string name="mode_monet_system">Monet Follow System</string>
+    <string name="mode_monet_light">Monet Light</string>
+    <string name="mode_monet_dark">Monet Dark</string>
+    <string name="mode_dark_amoled">Dark AMOLED</string>
+    <string name="key_color">Key Color</string>
+    <string name="palette_style">Palette Style</string>
+    <string name="color_spec">Color Spec</string>
+    <string name="enable_blur">Enable Blur</string>
+    <string name="enable_floating_bottom_bar">Floating Bottom Bar</string>
+    <string name="enable_floating_bottom_bar_blur">Bottom Bar Glass</string>
+    <string name="enable_miuix_monet">Miuix Monet</string>
+    <string name="page_scale">Page Scale</string>
+
+    <string name="model_standard">Standard Model</string>
+
+    <string name="process_settings_title">Process Settings</string>
+    <string name="process_settings_subtitle">Choose process mode, denoise strength and transcription output</string>
+    <string name="process_mode">Process Mode</string>
+    <string name="process_mode_summary">Results will be generated with this workflow</string>
+    <string name="denoise_strength">Denoise Strength</string>
+    <string name="start_process">Start Processing</string>
+
+    <string name="processing_title">Processing</string>
+    <string name="processing_current_stage">Current stage: %1$s</string>
+    <string name="stage_read_file">Read File</string>
+    <string name="stage_extract_audio">Extract Audio</string>
+    <string name="stage_denoise">Denoise</string>
+    <string name="stage_transcribe">Transcribe</string>
+    <string name="stage_export">Export</string>
+    <string name="stage_completed">Completed</string>
+    <string name="stage_in_progress">In Progress</string>
+    <string name="stage_waiting">Waiting</string>
+    <string name="show_log">Show Log</string>
+    <string name="hide_log">Hide Log</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+
+    <string name="result_detail_title">Result Detail</string>
+    <string name="player_placeholder">Player</string>
+    <string name="player_original">Original</string>
+    <string name="player_denoised">Denoised</string>
+    <string name="transcript_text">Transcript</string>
+    <string name="transcript_sample_1">Today we mainly discuss the Android architecture of this project.</string>
+    <string name="transcript_sample_2">Denoise can use local models first, transcription can add multi-model selection later.</string>
+    <string name="export_title">Export</string>
+
+    <string name="status_completed">Completed</string>
+    <string name="status_processing">Processing</string>
+    <string name="status_failed">Failed</string>
+    <string name="status_pending">Pending</string>
+
+    <string name="welcome_slogan">Clean noise, keep voice</string>
+    <string name="welcome_desc">Support audio and video denoise, generate transcripts, subtitles and shareable exports. Local-first by default.</string>
+    <string name="welcome_tag_local">Local First</string>
+    <string name="welcome_tag_bilingual">Bilingual</string>
+    <string name="welcome_tag_subtitle">Subtitle Export</string>
+    <string name="welcome_get_started">Get Started</string>
+
+    <string name="notification_channel_progress">Processing Progress</string>
+    <string name="notification_channel_progress_desc">Show current file processing progress</string>
+    <string name="notification_channel_result">Processing Result</string>
+    <string name="notification_channel_result_desc">Notification for completion or failure</string>
+    <string name="notification_process_complete">Processing completed</string>
+    <string name="notification_process_failed">Processing failed</string>
+
+    <string name="service_process_title">FVoice Processing Service</string>
+    <string name="service_process_preparing">Preparing…</string>
+    <string name="service_process_running">Processing…</string>
+</resources>

@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">清声</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">首页</string>
+    <string name="nav_tasks">任务</string>
+    <string name="nav_transcript">转写</string>
+    <string name="nav_settings">设置</string>
+
+    <!-- Home -->
+    <string name="home_subtitle">音频/视频降噪与转写</string>
+    <string name="home_start_process">开始处理</string>
+    <string name="home_start_desc">导入音频或视频，完成降噪、转写和导出。</string>
+    <string name="home_import_audio">导入音频</string>
+    <string name="import_audio_summary">选择本地录音、播客或音频文件</string>
+    <string name="home_import_video">导入视频</string>
+    <string name="import_video_summary">从视频中提取音轨并继续处理</string>
+    <string name="home_recent_tasks">最近任务</string>
+    <string name="permission_section">授权状态</string>
+    <string name="permission_ready">核心权限已就绪，可进行文件处理与实时录音。</string>
+    <string name="permission_missing">请先授予缺失权限，避免后台处理或导出失败。</string>
+    <string name="permission_storage">存储访问</string>
+    <string name="permission_notification">通知权限</string>
+    <string name="permission_microphone">麦克风</string>
+    <string name="permission_battery">电池白名单</string>
+    <string name="permission_overlay">悬浮窗</string>
+    <string name="permission_granted">已授权</string>
+    <string name="permission_required">必需</string>
+    <string name="permission_optional">可选</string>
+    <string name="permission_action_required">待处理</string>
+    <string name="permission_grant_action">去授权</string>
+    <string name="permission_status_ready_title">授权已完成</string>
+    <string name="permission_status_missing_title">需要完成授权</string>
+
+    <!-- Task -->
+    <string name="task_subtitle">管理处理历史和队列</string>
+    <string name="task_search_hint">搜索文件名或文字内容</string>
+    <string name="task_filter_title">任务筛选</string>
+    <string name="filter_all">全部</string>
+    <string name="filter_processing">处理中</string>
+    <string name="filter_completed">已完成</string>
+    <string name="completion_time">完成时间</string>
+
+    <!-- Transcript -->
+    <string name="transcript_subtitle">集中管理文字稿、字幕和摘要</string>
+    <string name="transcript_search_hint">搜索文字稿内容</string>
+    <string name="transcript_filter_title">文字稿筛选</string>
+
+    <!-- Settings -->
+    <string name="settings_subtitle">应用偏好、模型管理与日志反馈</string>
+    <string name="settings_section_app">应用</string>
+    <string name="settings_check_update">检查更新</string>
+    <string name="settings_check_update_auto">自动检查</string>
+    <string name="settings_language">语言</string>
+    <string name="settings_ui_mode">界面风格</string>
+    <string name="settings_ui_mode_summary">选择应用的界面风格</string>
+    <string name="settings_theme">主题设置</string>
+    <string name="settings_theme_summary">选择应用主题模式。</string>
+    <string name="settings_theme_mode_system">跟随系统</string>
+    <string name="settings_theme_mode_light">浅色</string>
+    <string name="settings_theme_mode_dark">深色</string>
+    <string name="settings_monet">启用 Monet</string>
+    <string name="settings_key_color_default">默认</string>
+    <string name="settings_color_style">配色样式</string>
+    <string name="settings_enable_blur">启用模糊</string>
+    <string name="settings_enable_blur_summary">启用顶部和底部栏的模糊效果。</string>
+    <string name="settings_floating_bottom_bar">悬浮底栏</string>
+    <string name="settings_floating_bottom_bar_summary">使用 Apple 风格的浮动底部栏。</string>
+    <string name="settings_enable_glass">液态玻璃</string>
+    <string name="settings_enable_glass_summary">为浮动底部栏启用液态玻璃效果。</string>
+    <string name="settings_enable_predictive_back">预测性返回手势</string>
+    <string name="settings_enable_predictive_back_summary">从屏幕边缘向内滑动时预览返回目标页面。</string>
+    <string name="settings_page_scale_summary">调整全局显示缩放。</string>
+    <string name="settings_export_config">导出配置</string>
+    <string name="settings_import_config">导入配置</string>
+    <string name="settings_config_summary">参考 MAA-Meow 的配置备份流程</string>
+    <string name="settings_section_model">模型</string>
+    <string name="settings_denoise_model">降噪模型</string>
+    <string name="settings_transcribe_model">转文字模型</string>
+    <string name="settings_section_feedback">反馈与信息</string>
+    <string name="settings_send_logs">发送日志</string>
+    <string name="save_log">保存日志</string>
+    <string name="send_log">发送日志</string>
+    <string name="log_saved">日志已保存</string>
+    <string name="settings_about">关于</string>
+    <string name="settings_version_license">版本与许可证</string>
+    <string name="about_version">版本</string>
+    <string name="about_license">开源许可</string>
+    <string name="about_license_summary">查看依赖与许可信息</string>
+    <string name="about_source_code_title">查看源代码</string>
+    <string name="about_source_code_summary">查看项目源码、提交问题或参与改进</string>
+    <string name="about_qq_channel_title">添加 QQ 频道</string>
+    <string name="about_qq_channel_summary">加入频道获取更新、反馈问题并参与交流</string>
+
+    <!-- Language -->
+    <string name="language_follow_system">跟随系统</string>
+    <string name="language_chinese">中文</string>
+    <string name="language_english">English</string>
+    <string name="language_chinese_english">中文/English</string>
+
+    <!-- Theme -->
+    <string name="theme_settings_title">主题设置</string>
+    <string name="theme_follow_system">跟随系统</string>
+    <string name="color_mode">颜色模式</string>
+    <string name="mode_system">跟随系统</string>
+    <string name="mode_light">浅色</string>
+    <string name="mode_dark">深色</string>
+    <string name="mode_monet_system">Monet 跟随系统</string>
+    <string name="mode_monet_light">Monet 浅色</string>
+    <string name="mode_monet_dark">Monet 深色</string>
+    <string name="mode_dark_amoled">深色 AMOLED</string>
+    <string name="key_color">关键色</string>
+    <string name="palette_style">配色样式</string>
+    <string name="color_spec">色彩规格</string>
+    <string name="settings_color_spec">色彩规格</string>
+    <string name="settings_page_scale">页面缩放</string>
+    <string name="page_scale">页面缩放</string>
+    <string name="enable_floating_bottom_bar">悬浮底栏</string>
+    <string name="enable_floating_bottom_bar_blur">底栏玻璃效果</string>
+    <string name="enable_miuix_monet">Miuix Monet</string>
+
+    <!-- Color Names -->
+    <string name="color_red">红</string>
+    <string name="color_pink">粉</string>
+    <string name="color_purple">紫</string>
+    <string name="color_deep_purple">深紫</string>
+    <string name="color_indigo">靛蓝</string>
+    <string name="color_blue">蓝</string>
+    <string name="color_cyan">浅蓝</string>
+    <string name="color_teal">青</string>
+    <string name="color_green">绿</string>
+    <string name="color_yellow">黄</string>
+    <string name="color_amber">琥珀</string>
+    <string name="color_orange">橙</string>
+    <string name="color_brown">棕</string>
+    <string name="color_blue_grey">蓝灰</string>
+    <string name="color_sakura">樱</string>
+
+    <!-- Model -->
+    <string name="model_standard">标准模型</string>
+
+    <!-- Process -->
+    <string name="process_settings_title">处理设置</string>
+    <string name="process_settings_subtitle">选择处理模式、降噪强度和转写输出</string>
+    <string name="process_mode">处理模式</string>
+    <string name="process_mode_summary">处理流程会按此模式生成结果</string>
+    <string name="denoise_strength">降噪强度</string>
+    <string name="start_process">开始处理</string>
+
+    <!-- Processing -->
+    <string name="processing_title">正在处理</string>
+    <string name="processing_current_stage">当前阶段：%1$s</string>
+    <string name="stage_read_file">读取文件</string>
+    <string name="stage_extract_audio">提取音轨</string>
+    <string name="stage_denoise">降噪处理</string>
+    <string name="stage_transcribe">语音转写</string>
+    <string name="stage_export">导出结果</string>
+    <string name="stage_completed">已完成</string>
+    <string name="stage_in_progress">进行中</string>
+    <string name="stage_waiting">等待中</string>
+    <string name="show_log">显示日志</string>
+    <string name="hide_log">隐藏日志</string>
+    <string name="cancel">取消</string>
+    <string name="confirm">确定</string>
+
+    <!-- Result -->
+    <string name="result_detail_title">结果详情</string>
+    <string name="player_placeholder">播放器</string>
+    <string name="player_original">原始</string>
+    <string name="player_denoised">降噪后</string>
+    <string name="transcript_text">转写文本</string>
+    <string name="transcript_sample_1">今天我们主要讨论这个项目的安卓端架构。</string>
+    <string name="transcript_sample_2">降噪部分可以先采用本地模型，转写部分后续再加入多模型选择。</string>
+    <string name="export_title">导出</string>
+
+    <!-- Status -->
+    <string name="status_completed">已完成</string>
+    <string name="status_processing">处理中</string>
+    <string name="status_failed">失败</string>
+    <string name="status_pending">待处理</string>
+
+    <!-- Welcome -->
+    <string name="welcome_slogan">清理噪声，保留人声</string>
+    <string name="welcome_desc">支持音频和视频文件降噪，并可生成文字稿、字幕和可分享的导出文件。默认优先本机处理。</string>
+    <string name="welcome_tag_local">本地优先</string>
+    <string name="welcome_tag_bilingual">中英双语</string>
+    <string name="welcome_tag_subtitle">字幕导出</string>
+    <string name="welcome_get_started">开始使用</string>
+
+    <!-- Notification -->
+    <string name="notification_channel_progress">处理进度</string>
+    <string name="notification_channel_progress_desc">显示当前文件处理进度</string>
+    <string name="notification_channel_result">处理结果</string>
+    <string name="notification_channel_result_desc">处理完成或失败的通知</string>
+    <string name="notification_process_complete">处理完成</string>
+    <string name="notification_process_failed">处理失败</string>
+
+    <!-- Service -->
+    <string name="service_process_title">清声处理服务</string>
+    <string name="service_process_preparing">准备中…</string>
+    <string name="service_process_running">正在处理…</string>
+</resources>
