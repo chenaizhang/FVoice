@@ -1,6 +1,7 @@
 package com.fvoice.app.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.fvoice.app.ui.theme.ColorMode
 import com.fvoice.app.data.model.UiMode
 import com.fvoice.app.data.preferences.SettingsRepositoryImpl
@@ -10,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.io.InputStream
 import java.io.OutputStream
@@ -21,9 +23,9 @@ data class SettingsUiState(
     val keyColor: Int = 0,
     val paletteStyle: PaletteStyle = PaletteStyle.TonalSpot,
     val colorSpec: ColorSpec.SpecVersion = ColorSpec.SpecVersion.Default,
-    val enableBlur: Boolean = false,
-    val enableFloatingBottomBar: Boolean = false,
-    val enableFloatingBottomBarBlur: Boolean = false,
+    val enableBlur: Boolean = true,
+    val enableFloatingBottomBar: Boolean = true,
+    val enableFloatingBottomBarBlur: Boolean = true,
     val pageScale: Float = 1.0f,
     val checkUpdate: Boolean = true,
     val language: String = "system",
@@ -159,6 +161,27 @@ class SettingsViewModel : ViewModel() {
     fun setCheckUpdate(enabled: Boolean) {
         settingsRepository.checkUpdate = enabled
         loadSettings()
+    }
+
+    fun checkForUpdate(onResult: (Boolean, String) -> Unit) {
+        viewModelScope.launch {
+            try {
+                val url = java.net.URL("https://api.github.com/repos/chenaizhang/FVoice/releases/latest")
+                val connection = url.openConnection() as java.net.HttpURLConnection
+                connection.requestMethod = "GET"
+                connection.setRequestProperty("Accept", "application/vnd.github.v3+json")
+                connection.connectTimeout = 10000
+                connection.readTimeout = 10000
+                val response = connection.inputStream.bufferedReader().use { it.readText() }
+                val json = org.json.JSONObject(response)
+                val latestTag = json.optString("tag_name", "").removePrefix("v")
+                val currentVersion = com.fvoice.app.BuildConfig.VERSION_NAME
+                val hasUpdate = latestTag.isNotBlank() && latestTag != currentVersion
+                onResult(hasUpdate, if (hasUpdate) "最新版本: v$latestTag" else "当前已是最新版本")
+            } catch (e: Exception) {
+                onResult(false, "检查更新失败: ${e.message}")
+            }
+        }
     }
 
     fun setLanguage(language: String) {

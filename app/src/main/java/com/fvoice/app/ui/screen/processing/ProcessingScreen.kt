@@ -37,8 +37,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -50,14 +50,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.dropUnlessResumed
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.fvoice.app.R
+import com.fvoice.app.core.model.ProcessTaskStatus
 import com.fvoice.app.data.model.UiMode
 import com.fvoice.app.service.ProcessForegroundService
 import com.fvoice.app.ui.component.FVoiceMiuixCard
 import com.fvoice.app.ui.component.FVoiceMiuixInfoRow
 import com.fvoice.app.ui.component.LocalFVoiceMiuixBottomSpacing
+import com.fvoice.app.ui.navigation3.LocalNavigator
 import com.fvoice.app.ui.theme.LocalUiMode
-import kotlinx.coroutines.delay
+import com.fvoice.app.viewmodel.ProcessingViewModel
 import top.yukonga.miuix.kmp.basic.Button as MiuixButton
 import top.yukonga.miuix.kmp.basic.CircularProgressIndicator as MiuixCircularProgressIndicator
 import top.yukonga.miuix.kmp.basic.Icon as MiuixIcon
@@ -73,12 +77,20 @@ import top.yukonga.miuix.kmp.theme.MiuixTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProcessingScreen(
-    onCancel: () -> Unit,
-    onComplete: () -> Unit
+    taskId: String,
+    onComplete: (String) -> Unit
 ) {
+    val navigator = LocalNavigator.current
     val context = LocalContext.current
-    var progress by remember { mutableIntStateOf(0) }
+    val viewModel: ProcessingViewModel = viewModel()
+    val uiState by viewModel.uiState.collectAsState()
     var showLog by remember { mutableStateOf(false) }
+    val cancelAndBack = dropUnlessResumed {
+        viewModel.cancel()
+        ProcessForegroundService.stop(context)
+        navigator.pop()
+    }
+
     val stages = listOf(
         stringResource(R.string.stage_read_file),
         stringResource(R.string.stage_extract_audio),
@@ -86,20 +98,25 @@ fun ProcessingScreen(
         stringResource(R.string.stage_transcribe),
         stringResource(R.string.stage_export)
     )
-    var currentStage by remember { mutableIntStateOf(2) }
 
-    LaunchedEffect(Unit) {
-        ProcessForegroundService.start(context)
-        for (i in 0..100) {
-            progress = i
-            if (i < 20) currentStage = 0
-            else if (i < 40) currentStage = 1
-            else if (i < 70) currentStage = 2
-            else if (i < 90) currentStage = 3
-            else currentStage = 4
-            delay(200)
+    val currentStageIndex = remember(uiState.progress.currentStage) {
+        stages.indexOfFirst { uiState.progress.currentStage.contains(it) }.coerceAtLeast(0)
+    }
+
+    val progress = uiState.progress.percent.coerceIn(0, 100)
+
+    LaunchedEffect(taskId) {
+        if (taskId.isNotBlank()) {
+            com.fvoice.app.FVoiceApplication.processTaskManager.startTask(taskId) {
+                ProcessForegroundService.start(context, taskId)
+            }
         }
-        onComplete()
+    }
+
+    LaunchedEffect(uiState.task?.status) {
+        if (uiState.task?.status == ProcessTaskStatus.COMPLETED) {
+            onComplete(taskId)
+        }
     }
 
     val animatedProgress by animateFloatAsState(
@@ -115,10 +132,7 @@ fun ProcessingScreen(
                 MiuixTopAppBar(
                     title = stringResource(R.string.processing_title),
                     navigationIcon = {
-                        MiuixIconButton(onClick = {
-                            ProcessForegroundService.stop(context)
-                            onCancel()
-                        }) {
+                        MiuixIconButton(onClick = cancelAndBack) {
                             MiuixIcon(MiuixIcons.Back, contentDescription = null)
                         }
                     }
@@ -137,7 +151,7 @@ fun ProcessingScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 MiuixText(
-                    text = stringResource(R.string.processing_current_stage, stages[currentStage]),
+                    text = stringResource(R.string.processing_current_stage, uiState.progress.currentStage),
                     color = MiuixTheme.colorScheme.onSurfaceVariantSummary
                 )
                 Box(contentAlignment = Alignment.Center, modifier = Modifier.size(168.dp)) {
@@ -148,25 +162,29 @@ fun ProcessingScreen(
                         fontWeight = FontWeight.Bold
                     )
                 }
+                if (uiState.error != null) {
+                    MiuixText(
+                        text = uiState.error!!,
+                        color = MiuixTheme.colorScheme.error,
+                        fontSize = 14.sp
+                    )
+                }
                 MiuixTextButton(
                     text = if (showLog) stringResource(R.string.hide_log) else stringResource(R.string.show_log),
                     onClick = { showLog = !showLog }
                 )
                 if (showLog) {
-                    ProcessingLogMiuixCard()
+                    ProcessingLogMiuixCard(logs = uiState.logs)
                 } else {
                     ProcessingStagesMiuixCard(
                         stages = stages,
-                        currentStage = currentStage,
+                        currentStage = currentStageIndex,
                         progress = progress
                     )
                 }
                 Spacer(modifier = Modifier.weight(1f))
                 MiuixButton(
-                    onClick = {
-                        ProcessForegroundService.stop(context)
-                        onCancel()
-                    },
+                    onClick = cancelAndBack,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = miuixBottomSpacing + 12.dp)
@@ -183,10 +201,7 @@ fun ProcessingScreen(
             TopAppBar(
                 title = { Text(stringResource(R.string.processing_title)) },
                 navigationIcon = {
-                    IconButton(onClick = {
-                        ProcessForegroundService.stop(context)
-                        onCancel()
-                    }) {
+                    IconButton(onClick = cancelAndBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
                     }
                 }
@@ -203,7 +218,7 @@ fun ProcessingScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Text(
-                text = stringResource(R.string.processing_current_stage, stages[currentStage]),
+                text = stringResource(R.string.processing_current_stage, uiState.progress.currentStage),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -226,6 +241,14 @@ fun ProcessingScreen(
                 )
             }
 
+            if (uiState.error != null) {
+                Text(
+                    text = uiState.error!!,
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+
             OutlinedButton(onClick = { showLog = !showLog }) {
                 Text(if (showLog) stringResource(R.string.hide_log) else stringResource(R.string.show_log))
             }
@@ -233,9 +256,13 @@ fun ProcessingScreen(
             if (showLog) {
                 Card(modifier = Modifier.fillMaxWidth()) {
                     Column(modifier = Modifier.padding(12.dp)) {
-                        Text("[12:04:17] Noise model initialized", style = MaterialTheme.typography.bodySmall)
-                        Text("[12:04:23] Processing chunk 18/64", style = MaterialTheme.typography.bodySmall)
-                        Text("[12:04:29] Current SNR estimate: +8.6dB", style = MaterialTheme.typography.bodySmall)
+                        if (uiState.logs.isEmpty()) {
+                            Text("No logs yet...", style = MaterialTheme.typography.bodySmall)
+                        } else {
+                            uiState.logs.forEach { logLine ->
+                                Text(logLine, style = MaterialTheme.typography.bodySmall)
+                            }
+                        }
                     }
                 }
             } else {
@@ -243,8 +270,8 @@ fun ProcessingScreen(
                     Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                         stages.forEachIndexed { index, stage ->
                             val stageColor = when {
-                                index < currentStage -> MaterialTheme.colorScheme.primary
-                                index == currentStage -> MaterialTheme.colorScheme.tertiary
+                                index < currentStageIndex -> MaterialTheme.colorScheme.primary
+                                index == currentStageIndex -> MaterialTheme.colorScheme.tertiary
                                 else -> MaterialTheme.colorScheme.outline
                             }
                             Row(
@@ -254,7 +281,7 @@ fun ProcessingScreen(
                             ) {
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     Text(
-                                        text = if (index < currentStage) "✓" else if (index == currentStage) "…" else "○",
+                                        text = if (index < currentStageIndex) "✓" else if (index == currentStageIndex) "…" else "○",
                                         color = stageColor,
                                         fontWeight = FontWeight.Bold
                                     )
@@ -267,8 +294,8 @@ fun ProcessingScreen(
                                 }
                                 Text(
                                     text = when {
-                                        index < currentStage -> stringResource(R.string.stage_completed)
-                                        index == currentStage -> stringResource(R.string.stage_in_progress)
+                                        index < currentStageIndex -> stringResource(R.string.stage_completed)
+                                        index == currentStageIndex -> stringResource(R.string.stage_in_progress)
                                         else -> stringResource(R.string.stage_waiting)
                                     },
                                     style = MaterialTheme.typography.bodySmall,
@@ -283,10 +310,7 @@ fun ProcessingScreen(
             Spacer(modifier = Modifier.weight(1f))
 
             Button(
-                onClick = {
-                    ProcessForegroundService.stop(context)
-                    onCancel()
-                },
+                onClick = cancelAndBack,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = materialBottomSpacing + 12.dp)
@@ -329,10 +353,14 @@ private fun ProcessingStagesMiuixCard(
 }
 
 @Composable
-private fun ProcessingLogMiuixCard() {
+private fun ProcessingLogMiuixCard(logs: List<String>) {
     FVoiceMiuixCard {
-        MiuixText("[12:04:17] Noise model initialized")
-        MiuixText("[12:04:23] Processing chunk 18/64")
-        MiuixText("[12:04:29] Current SNR estimate: +8.6dB")
+        if (logs.isEmpty()) {
+            MiuixText("No logs yet...")
+        } else {
+            logs.forEach { logLine ->
+                MiuixText(logLine, fontSize = 13.sp)
+            }
+        }
     }
 }

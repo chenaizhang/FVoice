@@ -13,10 +13,8 @@ import androidx.compose.material.icons.automirrored.filled.List as FilledList
 import androidx.compose.material.icons.automirrored.outlined.List as OutlinedList
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.TextFields
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material.icons.outlined.TextFields
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.Composable
@@ -57,11 +55,6 @@ enum class BottomNavDestination(
         labelRes = R.string.nav_tasks,
         selectedIcon = Icons.AutoMirrored.Filled.FilledList,
         unselectedIcon = Icons.AutoMirrored.Outlined.OutlinedList
-    ),
-    Transcript(
-        labelRes = R.string.nav_transcript,
-        selectedIcon = Icons.Filled.TextFields,
-        unselectedIcon = Icons.Outlined.TextFields
     ),
     Settings(
         labelRes = R.string.nav_settings,

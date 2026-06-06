@@ -11,20 +11,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.rounded.BugReport
 import androidx.compose.material.icons.rounded.Dashboard
-import androidx.compose.material.icons.rounded.Download
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Mic
 import androidx.compose.material.icons.rounded.Palette
 import androidx.compose.material.icons.rounded.RecordVoiceOver
 import androidx.compose.material.icons.rounded.Translate
 import androidx.compose.material.icons.rounded.Update
-import androidx.compose.material.icons.rounded.UploadFile
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -65,23 +61,12 @@ fun SettingsScreen(
     viewModel: SettingsViewModel,
     onNavigateToThemeSettings: () -> Unit,
     onNavigateToAbout: () -> Unit,
+    onNavigateToModelManager: (String) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val currentUiMode = LocalUiMode.current
     val context = LocalContext.current
     val showSendLog = remember { mutableStateOf(false) }
-    val exportLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.CreateDocument("application/json")
-    ) { uri ->
-        uri ?: return@rememberLauncherForActivityResult
-        context.contentResolver.openOutputStream(uri)?.use(viewModel::exportConfig)
-    }
-    val importLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.OpenDocument()
-    ) { uri ->
-        uri ?: return@rememberLauncherForActivityResult
-        context.contentResolver.openInputStream(uri)?.use(viewModel::importConfig)
-    }
 
     LaunchedEffect(uiState.backupMessage) {
         uiState.backupMessage?.let {
@@ -96,11 +81,13 @@ fun SettingsScreen(
                 uiState = uiState,
                 onNavigateToThemeSettings = onNavigateToThemeSettings,
                 onNavigateToAbout = onNavigateToAbout,
+                onNavigateToModelManager = onNavigateToModelManager,
                 onSetUiMode = { viewModel.setUiMode(it) },
                 onSetCheckUpdate = { viewModel.setCheckUpdate(it) },
-                onSetLanguage = { viewModel.setLanguage(it) },
-                onExportConfig = { exportLauncher.launch("fvoice_config.json") },
-                onImportConfig = { importLauncher.launch(arrayOf("application/json")) },
+                onSetLanguage = {
+                    viewModel.setLanguage(it)
+                    (context as? androidx.activity.ComponentActivity)?.recreate()
+                },
                 onShowSendLog = { showSendLog.value = true }
             )
             SendLogDialog(
@@ -113,11 +100,13 @@ fun SettingsScreen(
                 uiState = uiState,
                 onNavigateToThemeSettings = onNavigateToThemeSettings,
                 onNavigateToAbout = onNavigateToAbout,
+                onNavigateToModelManager = onNavigateToModelManager,
                 onSetUiMode = { viewModel.setUiMode(it) },
                 onSetCheckUpdate = { viewModel.setCheckUpdate(it) },
-                onSetLanguage = { viewModel.setLanguage(it) },
-                onExportConfig = { exportLauncher.launch("fvoice_config.json") },
-                onImportConfig = { importLauncher.launch(arrayOf("application/json")) },
+                onSetLanguage = {
+                    viewModel.setLanguage(it)
+                    (context as? androidx.activity.ComponentActivity)?.recreate()
+                },
                 onShowSendLog = { showSendLog.value = true }
             )
             if (showSendLog.value) {
@@ -136,11 +125,10 @@ fun SettingsMiuix(
     uiState: SettingsUiState,
     onNavigateToThemeSettings: () -> Unit,
     onNavigateToAbout: () -> Unit,
+    onNavigateToModelManager: (String) -> Unit,
     onSetUiMode: (UiMode) -> Unit,
     onSetCheckUpdate: (Boolean) -> Unit,
     onSetLanguage: (String) -> Unit,
-    onExportConfig: () -> Unit,
-    onImportConfig: () -> Unit,
     onShowSendLog: () -> Unit,
 ) {
     FVoiceMiuixPage(title = stringResource(R.string.nav_settings)) {
@@ -201,32 +189,6 @@ fun SettingsMiuix(
                         },
                         onClick = onNavigateToThemeSettings
                     )
-                    ArrowPreference(
-                        title = stringResource(R.string.settings_export_config),
-                        summary = stringResource(R.string.settings_config_summary),
-                        startAction = {
-                            MiuixIcon(
-                                Icons.Rounded.UploadFile,
-                                modifier = Modifier.padding(end = 6.dp),
-                                contentDescription = stringResource(R.string.settings_export_config),
-                                tint = MiuixTheme.colorScheme.onBackground
-                            )
-                        },
-                        onClick = onExportConfig
-                    )
-                    ArrowPreference(
-                        title = stringResource(R.string.settings_import_config),
-                        summary = stringResource(R.string.settings_config_summary),
-                        startAction = {
-                            MiuixIcon(
-                                Icons.Rounded.Download,
-                                modifier = Modifier.padding(end = 6.dp),
-                                contentDescription = stringResource(R.string.settings_import_config),
-                                tint = MiuixTheme.colorScheme.onBackground
-                            )
-                        },
-                        onClick = onImportConfig
-                    )
                 }
             }
         }
@@ -245,7 +207,7 @@ fun SettingsMiuix(
                                 tint = MiuixTheme.colorScheme.onBackground
                             )
                         },
-                        onClick = {}
+                        onClick = { onNavigateToModelManager("denoise") }
                     )
                     ArrowPreference(
                         title = stringResource(R.string.settings_transcribe_model),
@@ -258,7 +220,7 @@ fun SettingsMiuix(
                                 tint = MiuixTheme.colorScheme.onBackground
                             )
                         },
-                        onClick = {}
+                        onClick = { onNavigateToModelManager("transcribe") }
                     )
                 }
             }
@@ -332,11 +294,10 @@ fun SettingsMaterial(
     uiState: SettingsUiState,
     onNavigateToThemeSettings: () -> Unit,
     onNavigateToAbout: () -> Unit,
+    onNavigateToModelManager: (String) -> Unit,
     onSetUiMode: (UiMode) -> Unit,
     onSetCheckUpdate: (Boolean) -> Unit,
     onSetLanguage: (String) -> Unit,
-    onExportConfig: () -> Unit,
-    onImportConfig: () -> Unit,
     onShowSendLog: () -> Unit,
 ) {
     Scaffold(
@@ -394,18 +355,6 @@ fun SettingsMaterial(
                         subtitle = stringResource(R.string.theme_follow_system),
                         onClick = onNavigateToThemeSettings
                     )
-                    HorizontalDivider()
-                    MaterialArrowItem(
-                        title = stringResource(R.string.settings_export_config),
-                        subtitle = stringResource(R.string.settings_config_summary),
-                        onClick = onExportConfig
-                    )
-                    HorizontalDivider()
-                    MaterialArrowItem(
-                        title = stringResource(R.string.settings_import_config),
-                        subtitle = stringResource(R.string.settings_config_summary),
-                        onClick = onImportConfig
-                    )
                 }
             }
 
@@ -420,13 +369,13 @@ fun SettingsMaterial(
                     MaterialArrowItem(
                         title = stringResource(R.string.settings_denoise_model),
                         subtitle = stringResource(R.string.model_standard),
-                        onClick = {}
+                        onClick = { onNavigateToModelManager("denoise") }
                     )
                     HorizontalDivider()
                     MaterialArrowItem(
                         title = stringResource(R.string.settings_transcribe_model),
                         subtitle = stringResource(R.string.language_chinese_english),
-                        onClick = {}
+                        onClick = { onNavigateToModelManager("transcribe") }
                     )
                 }
             }

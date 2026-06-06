@@ -14,6 +14,14 @@
     <string name="import_audio_summary">Pick a recording, podcast or local audio file</string>
     <string name="home_import_video">Import Video</string>
     <string name="import_video_summary">Extract the soundtrack and continue processing</string>
+    <string name="home_start_recording">Start Recording</string>
+    <string name="start_recording_summary">Record audio in real-time and process</string>
+    <string name="recording_started">Recording started (auto-stop in 5s)</string>
+    <string name="recording_saved">Recording saved and queued for processing</string>
+    <string name="model_download_guide_title">Model Download Guide</string>
+    <string name="model_download_guide_whisper">Whisper: Download ggml format .bin from HuggingFace (e.g., ggml-tiny.bin)</string>
+    <string name="model_download_guide_vad">VAD: Download Silero VAD ONNX model file</string>
+    <string name="model_download_guide_denoise">Denoise: Download DeepFilterNet model file</string>
     <string name="home_recent_tasks">Recent Tasks</string>
     <string name="permission_section">Permissions</string>
     <string name="permission_ready">Core permissions are ready for file processing and live recording.</string>
@@ -56,6 +64,7 @@
     <string name="settings_denoise_model">Denoise Model</string>
     <string name="settings_transcribe_model">Transcribe Model</string>
     <string name="settings_send_logs">Send Logs</string>
+    <string name="save">Save</string>
     <string name="save_log">Save Log</string>
     <string name="send_log">Send Log</string>
     <string name="log_saved">Log saved</string>
@@ -87,8 +96,11 @@
     <string name="key_color">Key Color</string>
     <string name="palette_style">Palette Style</string>
     <string name="color_spec">Color Spec</string>
-    <string name="enable_blur">Enable Blur</string>
+    <string name="settings_enable_blur">Enable Blur</string>
+    <string name="settings_enable_predictive_back">Predictive Back Gesture</string>
+    <string name="settings_enable_predictive_back_summary">Preview the previous page when swiping in from the edge.</string>
     <string name="enable_floating_bottom_bar">Floating Bottom Bar</string>
+    <string name="settings_page_scale_summary">Adjust global display scale.</string>
     <string name="enable_floating_bottom_bar_blur">Bottom Bar Glass</string>
     <string name="enable_miuix_monet">Miuix Monet</string>
     <string name="page_scale">Page Scale</string>
@@ -109,6 +121,7 @@
     <string name="stage_denoise">Denoise</string>
     <string name="stage_transcribe">Transcribe</string>
     <string name="stage_export">Export</string>
+    <string name="stage_merge_video">Merging Video</string>
     <string name="stage_completed">Completed</string>
     <string name="stage_in_progress">In Progress</string>
     <string name="stage_waiting">Waiting</string>
@@ -122,28 +135,47 @@
     <string name="player_original">Original</string>
     <string name="player_denoised">Denoised</string>
     <string name="transcript_text">Transcript</string>
-    <string name="transcript_sample_1">Today we mainly discuss the Android architecture of this project.</string>
-    <string name="transcript_sample_2">Denoise can use local models first, transcription can add multi-model selection later.</string>
     <string name="export_title">Export</string>
 
     <string name="status_completed">Completed</string>
     <string name="status_processing">Processing</string>
     <string name="status_failed">Failed</string>
     <string name="status_pending">Pending</string>
+    <string name="status_cancelled">Cancelled</string>
 
-    <string name="welcome_slogan">Clean noise, keep voice</string>
-    <string name="welcome_desc">Support audio and video denoise, generate transcripts, subtitles and shareable exports. Local-first by default.</string>
-    <string name="welcome_tag_local">Local First</string>
-    <string name="welcome_tag_bilingual">Bilingual</string>
-    <string name="welcome_tag_subtitle">Subtitle Export</string>
-    <string name="welcome_get_started">Get Started</string>
+    <string name="error_task_already_running">Another task is already running</string>
+    <string name="error_invalid_input">Cannot read input file</string>
+    <string name="error_media_probe_failed">Media file probing failed</string>
+    <string name="error_audio_decode_failed">Audio decoding failed</string>
+    <string name="error_audio_encode_failed">Audio encoding failed</string>
+    <string name="error_denoise_failed">Denoise processing failed</string>
+    <string name="error_asr_failed">Speech recognition failed</string>
+    <string name="error_export_failed">Export failed</string>
+    <string name="error_model_not_available">Model not available, check model manager</string>
+    <string name="error_cancelled_by_user">Cancelled by user</string>
+    <string name="error_storage_denied">Storage access denied</string>
+    <string name="error_unknown">Unknown error</string>
+    <string name="error_service_bind_failed">Service start failed</string>
+    <string name="clear_history_title">Clear History</string>
+    <string name="clear_history_message">Are you sure you want to clear all history tasks? This action cannot be undone.</string>
+    <string name="delete_task_title">Delete Task</string>
+    <string name="delete_task_message">Are you sure you want to delete this task? This action cannot be undone.</string>
+
+    <string name="task_type_denoise">Denoise</string>
+    <string name="task_type_transcribe">Transcribe</string>
+    <string name="task_type_denoise_and_transcribe">Denoise &amp; Transcribe</string>
+    <string name="task_type_extract_audio">Extract Audio</string>
+    <string name="task_type_realtime_record">Realtime Record</string>
+    <string name="task_type_realtime_transcribe">Realtime Transcribe</string>
 
     <string name="notification_channel_progress">Processing Progress</string>
     <string name="notification_channel_progress_desc">Show current file processing progress</string>
     <string name="notification_channel_result">Processing Result</string>
     <string name="notification_channel_result_desc">Notification for completion or failure</string>
     <string name="notification_process_complete">Processing completed</string>
+    <string name="notification_process_complete_with_file">%1$s processing completed</string>
     <string name="notification_process_failed">Processing failed</string>
+    <string name="notification_process_failed_reason">Processing failed: %1$s</string>
 
     <string name="service_process_title">FVoice Processing Service</string>
     <string name="service_process_preparing">Preparing…</string>

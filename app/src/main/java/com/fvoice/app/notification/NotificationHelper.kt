@@ -8,6 +8,7 @@ import android.content.Intent
 import androidx.core.app.NotificationCompat
 import com.fvoice.app.MainActivity
 import com.fvoice.app.R
+import com.fvoice.app.service.ProcessForegroundService
 
 class NotificationHelper(private val context: Context) {
 
@@ -45,12 +46,23 @@ class NotificationHelper(private val context: Context) {
         notificationManager.createNotificationChannels(listOf(progressChannel, resultChannel))
     }
 
-    fun buildProgressNotification(title: String, progress: Int, stage: String): android.app.Notification {
+    fun buildProgressNotification(
+        title: String,
+        progress: Int,
+        stage: String,
+        taskId: String? = null
+    ): android.app.Notification {
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
         }
         val pendingIntent = PendingIntent.getActivity(
             context, 0, intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val cancelIntent = ProcessForegroundService.cancelIntent(context)
+        val cancelPendingIntent = PendingIntent.getService(
+            context, 1, cancelIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
@@ -62,17 +74,23 @@ class NotificationHelper(private val context: Context) {
             .setOngoing(true)
             .setContentIntent(pendingIntent)
             .setOnlyAlertOnce(true)
+            .addAction(android.R.drawable.ic_menu_close_clear_cancel, context.getString(R.string.cancel), cancelPendingIntent)
             .build()
     }
 
-    fun showProgressNotification(title: String, progress: Int, stage: String) {
+    fun showProgressNotification(
+        title: String,
+        progress: Int,
+        stage: String,
+        taskId: String? = null
+    ) {
         notificationManager.notify(
             PROGRESS_NOTIFICATION_ID,
-            buildProgressNotification(title, progress, stage)
+            buildProgressNotification(title, progress, stage, taskId)
         )
     }
 
-    fun showCompleteNotification(title: String, success: Boolean) {
+    fun showCompleteNotification(title: String, message: String) {
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
         }
@@ -80,12 +98,6 @@ class NotificationHelper(private val context: Context) {
             context, 0, intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
-
-        val message = if (success) {
-            context.getString(R.string.notification_process_complete)
-        } else {
-            context.getString(R.string.notification_process_failed)
-        }
 
         val notification = NotificationCompat.Builder(context, RESULT_CHANNEL_ID)
             .setContentTitle(title)
@@ -99,11 +111,20 @@ class NotificationHelper(private val context: Context) {
     }
 
     fun showErrorNotification(title: String, message: String) {
+        val intent = Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        }
+        val pendingIntent = PendingIntent.getActivity(
+            context, 0, intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
         val notification = NotificationCompat.Builder(context, RESULT_CHANNEL_ID)
             .setContentTitle(title)
             .setContentText(message)
             .setSmallIcon(android.R.drawable.ic_dialog_alert)
             .setAutoCancel(true)
+            .setContentIntent(pendingIntent)
             .build()
 
         notificationManager.notify(RESULT_NOTIFICATION_ID, notification)

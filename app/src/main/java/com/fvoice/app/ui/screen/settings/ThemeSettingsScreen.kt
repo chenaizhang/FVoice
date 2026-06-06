@@ -84,13 +84,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.activity.compose.LocalActivity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.fvoice.app.FVoiceApplication
+import androidx.lifecycle.compose.dropUnlessResumed
 import com.fvoice.app.R
 import com.fvoice.app.data.model.UiMode
 import com.fvoice.app.ui.component.LocalFVoiceMiuixBottomSpacing
+import com.fvoice.app.ui.navigation3.LocalNavigator
 import com.fvoice.app.ui.theme.LocalEnableBlur
 import com.fvoice.app.ui.theme.ColorMode
 import com.fvoice.app.ui.theme.LocalUiMode
@@ -123,10 +123,11 @@ import top.yukonga.miuix.kmp.utils.scrollEndHaptic
 
 @Composable
 fun ThemeSettingsScreen(
-    viewModel: SettingsViewModel,
-    onBack: () -> Unit
+    viewModel: SettingsViewModel
 ) {
+    val navigator = LocalNavigator.current
     val uiState by viewModel.uiState.collectAsState()
+    val onBack = dropUnlessResumed { navigator.pop() }
 
     when (LocalUiMode.current) {
         UiMode.Miuix -> ThemeSettingsMiuix(
@@ -175,9 +176,6 @@ private fun ThemeSettingsMiuix(
     val isDark = uiState.colorMode.isDark || (uiState.colorMode.isSystem && isSystemInDarkTheme())
     val backdrop = rememberBlurBackdrop(LocalEnableBlur.current)
     val barColor = if (backdrop != null) Color.Transparent else MiuixTheme.colorScheme.surface
-    val activity = LocalActivity.current
-    val context = LocalContext.current
-
     MiuixScaffold(
         topBar = {
             BlurredBar(backdrop) {
@@ -404,14 +402,7 @@ private fun ThemeSettingsMiuix(
                                 )
                             },
                             checked = uiState.enablePredictiveBack,
-                            onCheckedChange = {
-                                onSetEnablePredictiveBack(it)
-                                FVoiceApplication.setEnableOnBackInvokedCallback(
-                                    context.applicationInfo,
-                                    it
-                                )
-                                activity?.recreate()
-                            }
+                            onCheckedChange = onSetEnablePredictiveBack
                         )
                     }
 

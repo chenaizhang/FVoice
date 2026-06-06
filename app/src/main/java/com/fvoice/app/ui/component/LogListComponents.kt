@@ -407,9 +407,12 @@ fun FVoiceMaterialLogEntryItem(
     status: String?,
     statusColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
     modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null,
 ) {
     Surface(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable(enabled = onClick != null) { onClick?.invoke() },
         shape = LocalFVoiceSegmentShape.current,
         color = MaterialTheme.colorScheme.surfaceContainer,
         tonalElevation = 1.dp,

@@ -34,6 +34,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
@@ -57,12 +58,14 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fvoice.app.R
-import com.fvoice.app.data.model.TaskStatus
+import com.fvoice.app.core.model.ProcessTaskStatus
+import com.fvoice.app.core.model.ProcessTaskType
 import com.fvoice.app.data.model.UiMode
 import com.fvoice.app.ui.component.FVoiceMaterialLogEntryItem
 import com.fvoice.app.ui.component.FVoiceMaterialMessageCard
 import com.fvoice.app.ui.component.FVoiceMaterialSegmentedColumn
 import com.fvoice.app.ui.component.FVoiceMiuixLogEntryCard
+import com.fvoice.app.ui.component.DeleteConfirmDialog
 import com.fvoice.app.ui.component.FVoiceMiuixMessageCard
 import com.fvoice.app.ui.component.LocalFVoiceMiuixBottomSpacing
 import com.fvoice.app.ui.component.SearchStatus
@@ -70,6 +73,9 @@ import com.fvoice.app.ui.component.material.FVoiceMaterialSearchAppBar
 import com.fvoice.app.ui.component.miuix.FVoiceSearchBarFake
 import com.fvoice.app.ui.component.miuix.SearchBox
 import com.fvoice.app.ui.component.miuix.SearchPager
+import com.fvoice.app.ui.navigation3.LocalMainPagerState
+import com.fvoice.app.ui.navigation3.LocalNavigator
+import com.fvoice.app.ui.navigation3.Route
 import com.fvoice.app.ui.theme.LocalEnableBlur
 import com.fvoice.app.ui.theme.LocalUiMode
 import com.fvoice.app.ui.util.BlurredBar
@@ -80,6 +86,7 @@ import com.fvoice.app.viewmodel.TaskViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import top.yukonga.miuix.kmp.basic.Button as MiuixButton
 import top.yukonga.miuix.kmp.basic.Icon as MiuixIcon
 import top.yukonga.miuix.kmp.basic.IconButton as MiuixIconButton
 import top.yukonga.miuix.kmp.basic.ListPopupColumn
@@ -98,14 +105,33 @@ import top.yukonga.miuix.kmp.utils.overScrollVertical
 import top.yukonga.miuix.kmp.utils.scrollEndHaptic
 
 @Composable
-fun TaskListScreen(viewModel: TaskViewModel) {
+fun TaskListScreen(
+    viewModel: TaskViewModel,
+    onClearHistory: () -> Unit = {},
+    onTaskClick: (String) -> Unit = {},
+) {
     val uiState by viewModel.uiState.collectAsState()
+
+    // Refresh when Task page becomes visible in pager or when returning from detail
+    val mainPagerState = LocalMainPagerState.current
+    val navigator = LocalNavigator.current
+    val isTopLevel by remember {
+        derivedStateOf {
+            navigator.backStack.lastOrNull() is Route.Main
+        }
+    }
+    androidx.compose.runtime.LaunchedEffect(isTopLevel, mainPagerState.pagerState.settledPage) {
+        if (mainPagerState.pagerState.settledPage == 1 && isTopLevel) {
+            viewModel.refreshTasks()
+        }
+    }
+
     val filteredTasks = uiState.tasks
         .sortedWith(
             compareBy<TaskItem> {
-                if (it.status == TaskStatus.PROCESSING) 0 else 1
+                if (it.status == ProcessTaskStatus.PROCESSING || it.status == ProcessTaskStatus.PENDING) 0 else 1
             }.thenBy {
-                if (it.status == TaskStatus.PROCESSING) it.processingOrder else Int.MAX_VALUE
+                if (it.status == ProcessTaskStatus.PROCESSING || it.status == ProcessTaskStatus.PENDING) it.processingOrder else Int.MAX_VALUE
             }.thenByDescending {
                 it.completedAtMillis
             },
@@ -113,12 +139,12 @@ fun TaskListScreen(viewModel: TaskViewModel) {
         .filter { task ->
             val matchesFilter = when (uiState.filter) {
                 TaskFilter.ALL -> true
-                TaskFilter.PROCESSING -> task.status == TaskStatus.PROCESSING || task.status == TaskStatus.PENDING
-                TaskFilter.COMPLETED -> task.status == TaskStatus.COMPLETED
+                TaskFilter.PROCESSING -> task.status == ProcessTaskStatus.PROCESSING || task.status == ProcessTaskStatus.PENDING
+                TaskFilter.COMPLETED -> task.status == ProcessTaskStatus.COMPLETED
             }
             val matchesSearch = uiState.searchQuery.isBlank() ||
                     task.fileName.contains(uiState.searchQuery, ignoreCase = true) ||
-                    task.processMode.contains(uiState.searchQuery, ignoreCase = true)
+                    processModeLabel(task.processMode).contains(uiState.searchQuery, ignoreCase = true)
             matchesFilter && matchesSearch
         }
 
@@ -158,6 +184,8 @@ fun TaskListScreen(viewModel: TaskViewModel) {
         viewModel.setSearchQuery(nextStatus.searchText)
     }
 
+    var showClearConfirm by remember { mutableStateOf(false) }
+
     when (LocalUiMode.current) {
         UiMode.Miuix -> TaskListMiuix(
             tasks = filteredTasks,
@@ -166,6 +194,8 @@ fun TaskListScreen(viewModel: TaskViewModel) {
             filterItems = filterItems,
             selectedFilterIndex = selectedFilterIndex,
             onFilterSelected = onFilterSelected,
+            onClearHistory = { showClearConfirm = true },
+            onTaskClick = onTaskClick,
         )
 
         UiMode.Material -> TaskListMaterial(
@@ -175,8 +205,16 @@ fun TaskListScreen(viewModel: TaskViewModel) {
             filterItems = filterItems,
             selectedFilterIndex = selectedFilterIndex,
             onFilterSelected = onFilterSelected,
+            onClearHistory = { showClearConfirm = true },
+            onTaskClick = onTaskClick,
         )
     }
+
+    DeleteConfirmDialog(
+        show = showClearConfirm,
+        onConfirm = onClearHistory,
+        onDismiss = { showClearConfirm = false }
+    )
 }
 
 @Composable
@@ -187,6 +225,8 @@ private fun TaskListMiuix(
     filterItems: List<String>,
     selectedFilterIndex: Int,
     onFilterSelected: (Int) -> Unit,
+    onClearHistory: () -> Unit,
+    onTaskClick: (String) -> Unit = {},
 ) {
     val scrollBehavior = MiuixScrollBehavior()
     val backdrop = rememberBlurBackdrop(LocalEnableBlur.current)
@@ -303,11 +343,12 @@ private fun TaskListMiuix(
                                 val task = tasks[index]
                                 FVoiceMiuixLogEntryCard(
                                     title = task.fileName,
-                                    description = task.processMode,
+                                    description = processModeLabel(task.processMode),
                                     timestamp = taskCompletionText(task),
                                     tags = listOf(task.type),
                                     status = taskStatusLabel(task.status),
                                     statusColor = taskStatusColorMiuix(task.status),
+                                    onClick = { onTaskClick(task.id) },
                                 )
                             }
                         }
@@ -347,15 +388,28 @@ private fun TaskListMiuix(
                             val task = tasks[index]
                             FVoiceMiuixLogEntryCard(
                                 title = task.fileName,
-                                description = task.processMode,
+                                description = processModeLabel(task.processMode),
                                 timestamp = taskCompletionText(task),
                                 tags = listOf(task.type),
                                 status = taskStatusLabel(task.status),
                                 statusColor = taskStatusColorMiuix(task.status),
+                                onClick = { onTaskClick(task.id) },
                             )
                         }
                     }
 
+                    if (tasks.isNotEmpty()) {
+                        item {
+                            MiuixButton(
+                                onClick = onClearHistory,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                            ) {
+                                MiuixText(stringResource(R.string.clear_history_title))
+                            }
+                        }
+                    }
                     item {
                         Spacer(Modifier.height(LocalFVoiceMiuixBottomSpacing.current + 12.dp))
                     }
@@ -374,6 +428,8 @@ private fun TaskListMaterial(
     filterItems: List<String>,
     selectedFilterIndex: Int,
     onFilterSelected: (Int) -> Unit,
+    onClearHistory: () -> Unit,
+    onTaskClick: (String) -> Unit = {},
 ) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     var showFilterMenu by remember { mutableStateOf(false) }
@@ -447,11 +503,12 @@ private fun TaskListMaterial(
                                     val task = tasks[index]
                                     FVoiceMaterialLogEntryItem(
                                         title = task.fileName,
-                                        description = task.processMode,
+                                        description = processModeLabel(task.processMode),
                                         timestamp = taskCompletionText(task),
                                         tags = listOf(task.type),
                                         status = taskStatusLabel(task.status),
                                         statusColor = taskStatusColorMaterial(task.status),
+                                        onClick = { onTaskClick(task.id) },
                                     )
                                 }
                             }
@@ -487,12 +544,26 @@ private fun TaskListMaterial(
                             val task = tasks[index]
                             FVoiceMaterialLogEntryItem(
                                 title = task.fileName,
-                                description = task.processMode,
+                                description = processModeLabel(task.processMode),
                                 timestamp = taskCompletionText(task),
                                 tags = listOf(task.type),
                                 status = taskStatusLabel(task.status),
                                 statusColor = taskStatusColorMaterial(task.status),
+                                onClick = { onTaskClick(task.id) },
                             )
+                        }
+                    }
+                }
+
+                if (tasks.isNotEmpty()) {
+                    item {
+                        TextButton(
+                            onClick = onClearHistory,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp, vertical = 8.dp),
+                        ) {
+                            Text(stringResource(R.string.clear_history_title))
                         }
                     }
                 }
@@ -507,44 +578,59 @@ private fun TaskListMaterial(
 
 @Composable
 private fun taskCompletionText(task: TaskItem): String {
-    return if (task.status == TaskStatus.PROCESSING) {
-        "${stringResource(R.string.completion_time)}: ${stringResource(R.string.status_processing)}"
+    return if (task.status == ProcessTaskStatus.PROCESSING || task.status == ProcessTaskStatus.PENDING) {
+        ""
     } else {
-        "${stringResource(R.string.completion_time)}: ${formatCompletedAt(task.completedAtMillis)} · ${task.duration}"
+        formatCompletedAt(task.completedAtMillis)
     }
 }
 
 @Composable
-private fun taskStatusLabel(status: TaskStatus): String {
+private fun taskStatusLabel(status: ProcessTaskStatus): String {
     return when (status) {
-        TaskStatus.COMPLETED -> stringResource(R.string.status_completed)
-        TaskStatus.PROCESSING -> stringResource(R.string.status_processing)
-        TaskStatus.FAILED -> stringResource(R.string.status_failed)
-        TaskStatus.PENDING -> stringResource(R.string.status_pending)
+        ProcessTaskStatus.COMPLETED -> stringResource(R.string.status_completed)
+        ProcessTaskStatus.PROCESSING -> stringResource(R.string.status_processing)
+        ProcessTaskStatus.FAILED -> stringResource(R.string.status_failed)
+        ProcessTaskStatus.PENDING -> stringResource(R.string.status_pending)
+        ProcessTaskStatus.CANCELLED -> stringResource(R.string.status_cancelled)
     }
 }
 
 @Composable
-private fun taskStatusColorMiuix(status: TaskStatus): Color {
+private fun taskStatusColorMiuix(status: ProcessTaskStatus): Color {
     return when (status) {
-        TaskStatus.COMPLETED -> MiuixTheme.colorScheme.primary
-        TaskStatus.PROCESSING -> MiuixTheme.colorScheme.secondaryVariant
-        TaskStatus.FAILED -> MiuixTheme.colorScheme.error
-        TaskStatus.PENDING -> MiuixTheme.colorScheme.onSurfaceVariantActions
+        ProcessTaskStatus.COMPLETED -> MiuixTheme.colorScheme.primary
+        ProcessTaskStatus.PROCESSING -> MiuixTheme.colorScheme.secondaryVariant
+        ProcessTaskStatus.FAILED -> MiuixTheme.colorScheme.error
+        ProcessTaskStatus.PENDING -> MiuixTheme.colorScheme.onSurfaceVariantActions
+        ProcessTaskStatus.CANCELLED -> MiuixTheme.colorScheme.onSurfaceVariantActions
     }
 }
 
 @Composable
-private fun taskStatusColorMaterial(status: TaskStatus): Color {
+private fun taskStatusColorMaterial(status: ProcessTaskStatus): Color {
     return when (status) {
-        TaskStatus.COMPLETED -> MaterialTheme.colorScheme.primary
-        TaskStatus.PROCESSING -> MaterialTheme.colorScheme.tertiary
-        TaskStatus.FAILED -> MaterialTheme.colorScheme.error
-        TaskStatus.PENDING -> MaterialTheme.colorScheme.onSurfaceVariant
+        ProcessTaskStatus.COMPLETED -> MaterialTheme.colorScheme.primary
+        ProcessTaskStatus.PROCESSING -> MaterialTheme.colorScheme.tertiary
+        ProcessTaskStatus.FAILED -> MaterialTheme.colorScheme.error
+        ProcessTaskStatus.PENDING -> MaterialTheme.colorScheme.onSurfaceVariant
+        ProcessTaskStatus.CANCELLED -> MaterialTheme.colorScheme.onSurfaceVariant
     }
 }
 
 private fun formatCompletedAt(millis: Long): String {
-    if (millis <= 0) return "0"
-    return SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date(millis))
+    if (millis <= 0) return ""
+    return SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date(millis))
+}
+
+private fun processModeLabel(key: String): String {
+    return when (key) {
+        ProcessTaskType.DENOISE.labelKey -> "降噪"
+        ProcessTaskType.TRANSCRIBE.labelKey -> "转写"
+        ProcessTaskType.DENOISE_AND_TRANSCRIBE.labelKey -> "降噪并转写"
+        ProcessTaskType.EXTRACT_AUDIO.labelKey -> "提取音频"
+        ProcessTaskType.REALTIME_RECORD.labelKey -> "实时录音"
+        ProcessTaskType.REALTIME_TRANSCRIBE.labelKey -> "实时转写"
+        else -> key
+    }
 }

@@ -14,7 +14,7 @@ android {
         minSdk = 26
         targetSdk = 35
         versionCode = 1
-        versionName = "1.0.0"
+        versionName = "0.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -27,6 +27,19 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            /*
+             * TODO: Configure release signing
+             * Create a keystore and add signing config:
+             *   signingConfigs {
+             *       create("release") {
+             *           storeFile = file("release.keystore")
+             *           storePassword = System.getenv("STORE_PASSWORD")
+             *           keyAlias = System.getenv("KEY_ALIAS")
+             *           keyPassword = System.getenv("KEY_PASSWORD")
+             *       }
+             *   }
+             *   release { signingConfig = signingConfigs.getByName("release") }
+             */
         }
     }
 
@@ -40,9 +53,33 @@ android {
         buildConfig = true
     }
 
+    externalNativeBuild {
+        cmake {
+            path = file("src/main/cpp/CMakeLists.txt")
+        }
+    }
+
+    defaultConfig {
+        externalNativeBuild {
+            cmake {
+                cppFlags += "-std=c++17 -O3 -fno-finite-math-only"
+                arguments += "-DANDROID_STL=c++_shared"
+            }
+        }
+        ndk {
+            abiFilters += listOf("arm64-v8a", "x86_64")
+        }
+    }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
+
+    sourceSets {
+        getByName("androidTest") {
+            assets.setSrcDirs(listOf("src/main/cpp/whisper.cpp/samples"))
         }
     }
 }
@@ -74,7 +111,12 @@ dependencies {
     implementation(libs.miuix.preference)
     implementation(libs.miuix.blur)
     implementation(libs.materialkolor)
-    implementation(libs.hiddenapibypass)
+    implementation(libs.androidx.media3.exoplayer)
+    implementation(libs.androidx.media3.ui)
+    implementation(libs.opencc4j)
+
+    // ONNX Runtime for SileroVAD
+    implementation("com.microsoft.onnxruntime:onnxruntime-android:1.18.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

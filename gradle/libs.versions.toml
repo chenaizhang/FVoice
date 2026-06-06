@@ -2,7 +2,7 @@
 agp = "9.2.1"
 kotlin = "2.3.10"
 
-composeBom = "2026.02.00"
+composeBom = "2026.05.00"
 material3 = "1.5.0-alpha19"
 navigationCompose = "2.8.9"
 activityCompose = "1.13.0"
@@ -16,10 +16,11 @@ datastore = "1.1.6"
 kotlinxSerializationJson = "1.8.1"
 
 miuix = "0.9.1"
-navigation3 = "1.1.1"
+navigation3 = "1.1.2"
 navigationevent = "1.1.1"
 materialkolor = "4.1.1"
-hiddenapibypass = "6.1"
+media3 = "1.10.1"
+opencc4j = "1.8.1"
 
 junit = "4.13.2"
 junitVersion = "1.3.0"
@@ -59,7 +60,10 @@ miuix-blur = { group = "top.yukonga.miuix.kmp", name = "miuix-blur-android", ver
 miuix-navigation3-ui = { module = "top.yukonga.miuix.kmp:miuix-navigation3-ui-android", version.ref = "miuix" }
 
 materialkolor = { group = "com.materialkolor", name = "material-kolor", version.ref = "materialkolor" }
-hiddenapibypass = { module = "org.lsposed.hiddenapibypass:hiddenapibypass", version.ref = "hiddenapibypass" }
+androidx-media3-exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "media3" }
+androidx-media3-ui = { group = "androidx.media3", name = "media3-ui", version.ref = "media3" }
+
+opencc4j = { group = "com.github.houbb", name = "opencc4j", version.ref = "opencc4j" }
 
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

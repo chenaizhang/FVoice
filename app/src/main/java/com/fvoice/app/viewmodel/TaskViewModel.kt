@@ -1,10 +1,17 @@
 package com.fvoice.app.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.fvoice.app.data.model.TaskStatus
+import androidx.lifecycle.viewModelScope
+import com.fvoice.app.core.model.ProcessTask
+import com.fvoice.app.core.model.ProcessTaskStatus
+import com.fvoice.app.core.task.ProcessTaskManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import com.fvoice.app.FVoiceApplication
 
 data class TaskItem(
     val id: String,
@@ -12,7 +19,7 @@ data class TaskItem(
     val type: String,
     val processMode: String,
     val duration: String,
-    val status: TaskStatus,
+    val status: ProcessTaskStatus,
     val completedAtMillis: Long,
     val processingOrder: Int = Int.MAX_VALUE,
 )
@@ -29,50 +36,52 @@ enum class TaskFilter {
 
 class TaskViewModel : ViewModel() {
 
-    private val _uiState = MutableStateFlow(
-        TaskUiState(
-            tasks = listOf(
-                TaskItem(
-                    id = "1",
-                    fileName = "meeting_interview.mp4",
-                    type = "视频",
-                    processMode = "降噪并转写",
-                    duration = "12:43",
-                    status = TaskStatus.COMPLETED,
-                    completedAtMillis = 1_786_092_600_000,
-                ),
-                TaskItem(
-                    id = "2",
-                    fileName = "class_recording.wav",
-                    type = "音频",
-                    processMode = "仅转写",
-                    duration = "58:20",
-                    status = TaskStatus.PROCESSING,
-                    completedAtMillis = 0,
-                    processingOrder = 0,
-                ),
-                TaskItem(
-                    id = "3",
-                    fileName = "street_voice.m4a",
-                    type = "音频",
-                    processMode = "强力降噪",
-                    duration = "03:18",
-                    status = TaskStatus.FAILED,
-                    completedAtMillis = 1_785_828_000_000,
-                ),
-                TaskItem(
-                    id = "4",
-                    fileName = "demo_clip.mov",
-                    type = "视频",
-                    processMode = "替换降噪音轨",
-                    duration = "01:42",
-                    status = TaskStatus.COMPLETED,
-                    completedAtMillis = 1_786_172_400_000,
-                )
-            )
-        )
-    )
+    private val taskManager = FVoiceApplication.processTaskManager
+
+    private val _uiState = MutableStateFlow(TaskUiState())
     val uiState: StateFlow<TaskUiState> = _uiState.asStateFlow()
+
+    private val historyChangeListener = { loadTasks() }
+
+    init {
+        loadTasks()
+        taskManager.currentTask.onEach { _ ->
+            loadTasks()
+        }.launchIn(viewModelScope)
+        taskManager.historyChanged.onEach {
+            loadTasks()
+        }.launchIn(viewModelScope)
+        taskManager.addHistoryChangeListener(historyChangeListener)
+    }
+
+    fun refreshTasks() = loadTasks()
+
+    override fun onCleared() {
+        super.onCleared()
+        taskManager.removeHistoryChangeListener(historyChangeListener)
+    }
+
+    private fun loadTasks() {
+        val history = taskManager.loadHistory()
+        val current = taskManager.currentTask.value
+        val all = mutableListOf<ProcessTask>()
+        current?.let { all.add(it) }
+        all.addAll(history.filter { h -> h.id != current?.id })
+
+        val items = all.map { task ->
+            TaskItem(
+                id = task.id,
+                fileName = task.sourceFileName.ifBlank { "Unknown" },
+                type = if (task.isRealtime) "实时" else "文件",
+                processMode = task.type.labelKey,
+                duration = "",
+                status = task.status,
+                completedAtMillis = if (task.status == ProcessTaskStatus.PROCESSING) 0 else task.completedAt,
+                processingOrder = if (task.status == ProcessTaskStatus.PROCESSING) 0 else Int.MAX_VALUE
+            )
+        }
+        _uiState.value = _uiState.value.copy(tasks = items)
+    }
 
     fun setFilter(filter: TaskFilter) {
         _uiState.value = _uiState.value.copy(filter = filter)
@@ -80,5 +89,11 @@ class TaskViewModel : ViewModel() {
 
     fun setSearchQuery(query: String) {
         _uiState.value = _uiState.value.copy(searchQuery = query)
+    }
+
+    fun clearHistory() {
+        viewModelScope.launch {
+            taskManager.clearHistory()
+        }
     }
 }

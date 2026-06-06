@@ -1,5 +1,6 @@
 package com.fvoice.app.ui.navigation3
 
+import android.net.Uri
 import android.os.Parcelable
 import androidx.navigation3.runtime.NavKey
 import kotlinx.parcelize.Parcelize
@@ -10,10 +11,6 @@ import kotlinx.serialization.Serializable
  * Each destination is a NavKey and can be saved/restored in the back stack.
  */
 sealed interface Route : NavKey, Parcelable {
-    @Parcelize
-    @Serializable
-    data object Welcome : Route
-
     @Parcelize
     @Serializable
     data object Main : Route
@@ -28,23 +25,26 @@ sealed interface Route : NavKey, Parcelable {
 
     @Parcelize
     @Serializable
-    data object Transcript : Route
-
-    @Parcelize
-    @Serializable
     data object Settings : Route
 
     @Parcelize
     @Serializable
-    data object ProcessSettings : Route
+    data class ProcessSettings(
+        val sourceUri: String = "",
+        val fileName: String = ""
+    ) : Route
 
     @Parcelize
     @Serializable
-    data object Processing : Route
+    data class Processing(
+        val taskId: String = ""
+    ) : Route
 
     @Parcelize
     @Serializable
-    data object ResultDetail : Route
+    data class ResultDetail(
+        val taskId: String = ""
+    ) : Route
 
     @Parcelize
     @Serializable
@@ -57,4 +57,10 @@ sealed interface Route : NavKey, Parcelable {
     @Parcelize
     @Serializable
     data object About : Route
+
+    @Parcelize
+    @Serializable
+    data class ModelManager(
+        val category: String = "transcribe"
+    ) : Route
 }

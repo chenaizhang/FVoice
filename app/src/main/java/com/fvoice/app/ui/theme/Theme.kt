@@ -3,6 +3,7 @@ package com.fvoice.app.ui.theme
 import android.app.Activity
 import android.content.Context
 import android.os.Build
+import android.view.Window
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -161,8 +162,7 @@ fun MaterialFVoiceTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.background.toArgb()
-            window.navigationBarColor = colorScheme.background.toArgb()
+            setWindowBarColors(window, colorScheme.background.toArgb())
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
             WindowCompat.getInsetsController(window, view).isAppearanceLightNavigationBars = !darkTheme
         }
@@ -173,6 +173,12 @@ fun MaterialFVoiceTheme(
         typography = Typography,
         content = content
     )
+}
+
+@Suppress("DEPRECATION")
+private fun setWindowBarColors(window: Window, color: Int) {
+    window.statusBarColor = color
+    window.navigationBarColor = color
 }
 
 @Composable

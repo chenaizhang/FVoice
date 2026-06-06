@@ -2,7 +2,6 @@ package com.fvoice.app.ui.screen.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,13 +12,11 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material.icons.filled.MusicNote
-import androidx.compose.material.icons.filled.OpenInNew
 import androidx.compose.material.icons.filled.Videocam
 import androidx.compose.material.icons.rounded.Cancel
 import androidx.compose.material.icons.rounded.CheckCircleOutline
@@ -35,6 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -51,12 +49,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fvoice.app.R
 import com.fvoice.app.data.model.UiMode
-import com.fvoice.app.data.model.TaskStatus
 import com.fvoice.app.permission.PermissionManager
 import com.fvoice.app.permission.PermissionState
 import com.fvoice.app.ui.component.FVoiceMiuixCard
-import com.fvoice.app.ui.component.FVoiceMiuixInfoRow
 import com.fvoice.app.ui.component.FVoiceMiuixPage
+import com.fvoice.app.ui.navigation3.LocalMainPagerState
+import com.fvoice.app.ui.navigation3.LocalNavigator
+import com.fvoice.app.ui.navigation3.Route
 import com.fvoice.app.ui.theme.LocalUiMode
 import com.fvoice.app.viewmodel.HomeViewModel
 import top.yukonga.miuix.kmp.basic.Card as MiuixCard
@@ -70,10 +69,8 @@ fun HomeScreen(
     viewModel: HomeViewModel,
     onImportAudio: () -> Unit,
     onImportVideo: () -> Unit,
-    onTaskClick: (String) -> Unit,
     onNavigateToPermissions: () -> Unit,
 ) {
-    val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val permissionManager = remember(context) { PermissionManager(context) }
@@ -89,22 +86,32 @@ fun HomeScreen(
         onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
     }
 
+    // Refresh when Home page becomes visible in pager or when returning from detail
+    val mainPagerState = LocalMainPagerState.current
+    val navigator = LocalNavigator.current
+    val isTopLevel by remember {
+        derivedStateOf {
+            navigator.backStack.lastOrNull() is Route.Main
+        }
+    }
+    androidx.compose.runtime.LaunchedEffect(isTopLevel, mainPagerState.pagerState.settledPage) {
+        if (mainPagerState.pagerState.settledPage == 0 && isTopLevel) {
+            viewModel.refreshTasks()
+        }
+    }
+
     if (LocalUiMode.current == UiMode.Miuix) {
         HomeMiuix(
-            tasks = uiState.recentTasks,
             permissionState = permissionState,
             onImportAudio = onImportAudio,
             onImportVideo = onImportVideo,
-            onTaskClick = onTaskClick,
             onNavigateToPermissions = onNavigateToPermissions
         )
     } else {
         HomeMaterial(
-            tasks = uiState.recentTasks,
             permissionState = permissionState,
             onImportAudio = onImportAudio,
             onImportVideo = onImportVideo,
-            onTaskClick = onTaskClick,
             onNavigateToPermissions = onNavigateToPermissions
         )
     }
@@ -112,11 +119,9 @@ fun HomeScreen(
 
 @Composable
 private fun HomeMaterial(
-    tasks: List<com.fvoice.app.viewmodel.RecentTask>,
     permissionState: PermissionState,
     onImportAudio: () -> Unit,
     onImportVideo: () -> Unit,
-    onTaskClick: (String) -> Unit,
     onNavigateToPermissions: () -> Unit,
 ) {
     LazyColumn(
@@ -179,66 +184,14 @@ private fun HomeMaterial(
                 }
             }
         }
-
-        item {
-            Text(
-                text = stringResource(R.string.home_recent_tasks),
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.SemiBold
-            )
-        }
-
-        items(tasks.take(3)) { task ->
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                onClick = { onTaskClick(task.id) },
-                elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column {
-                        Text(
-                            text = task.fileName,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                        Text(
-                            text = "${task.type} · ${task.duration}",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                    Text(
-                        text = when (task.status) {
-                            TaskStatus.COMPLETED -> stringResource(R.string.status_completed)
-                            TaskStatus.PROCESSING -> stringResource(R.string.status_processing)
-                            TaskStatus.FAILED -> stringResource(R.string.status_failed)
-                            else -> stringResource(R.string.status_pending)
-                        },
-                        color = when (task.status) {
-                            TaskStatus.COMPLETED -> MaterialTheme.colorScheme.primary
-                            TaskStatus.PROCESSING -> MaterialTheme.colorScheme.tertiary
-                            TaskStatus.FAILED -> MaterialTheme.colorScheme.error
-                            else -> MaterialTheme.colorScheme.onSurfaceVariant
-                        }
-                    )
-                }
-            }
-        }
     }
 }
 
 @Composable
 private fun HomeMiuix(
-    tasks: List<com.fvoice.app.viewmodel.RecentTask>,
     permissionState: PermissionState,
     onImportAudio: () -> Unit,
     onImportVideo: () -> Unit,
-    onTaskClick: (String) -> Unit,
     onNavigateToPermissions: () -> Unit,
 ) {
     FVoiceMiuixPage(title = stringResource(R.string.app_name)) {
@@ -250,72 +203,7 @@ private fun HomeMiuix(
         }
 
         item { MiuixImportPanel(onImportAudio = onImportAudio, onImportVideo = onImportVideo) }
-
-        if (tasks.isNotEmpty()) {
-            item {
-                MiuixRecentTasksCard(
-                    tasks = tasks.take(3),
-                    onTaskClick = onTaskClick
-                )
-            }
-        }
     }
-}
-
-@Composable
-private fun MiuixRecentTasksCard(
-    tasks: List<com.fvoice.app.viewmodel.RecentTask>,
-    onTaskClick: (String) -> Unit,
-) {
-    MiuixCard(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 8.dp),
-        colors = MiuixCardDefaults.defaultColors(color = MiuixTheme.colorScheme.surfaceContainer)
-    ) {
-        Column {
-            tasks.forEachIndexed { index, task ->
-                RecentTaskMiuixRow(
-                    task = task,
-                    onClick = { onTaskClick(task.id) }
-                )
-                if (index != tasks.lastIndex) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(1.dp)
-                            .background(MiuixTheme.colorScheme.surfaceContainerHigh)
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun RecentTaskMiuixRow(
-    task: com.fvoice.app.viewmodel.RecentTask,
-    onClick: () -> Unit,
-) {
-    FVoiceMiuixInfoRow(
-        title = task.fileName,
-        summary = "${task.type} · ${task.duration}",
-        end = {
-            MiuixText(
-                text = when (task.status) {
-                    TaskStatus.COMPLETED -> stringResource(R.string.status_completed)
-                    TaskStatus.PROCESSING -> stringResource(R.string.status_processing)
-                    TaskStatus.FAILED -> stringResource(R.string.status_failed)
-                    else -> stringResource(R.string.status_pending)
-                },
-                color = statusColorMiuix(task.status)
-            )
-        },
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(horizontal = 16.dp, vertical = 13.dp)
-    )
 }
 
 @Composable
@@ -482,16 +370,6 @@ private fun PermissionCardMiuix(
                 )
             }
         }
-    }
-}
-
-@Composable
-private fun statusColorMiuix(status: TaskStatus): androidx.compose.ui.graphics.Color {
-    return when (status) {
-        TaskStatus.COMPLETED -> MiuixTheme.colorScheme.primary
-        TaskStatus.PROCESSING -> MiuixTheme.colorScheme.secondaryVariant
-        TaskStatus.FAILED -> MiuixTheme.colorScheme.error
-        else -> MiuixTheme.colorScheme.onSurfaceVariantSummary
     }
 }
 

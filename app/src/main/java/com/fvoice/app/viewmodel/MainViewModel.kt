@@ -23,11 +23,13 @@ data class MainUiState(
         colorSpec = com.materialkolor.dynamiccolor.ColorSpec.SpecVersion.Default
     ),
     val uiMode: UiMode = UiMode.Miuix,
-    val enableBlur: Boolean = false,
-    val enableFloatingBottomBar: Boolean = false,
-    val enableFloatingBottomBarBlur: Boolean = false,
+    val enableBlur: Boolean = true,
+    val enableFloatingBottomBar: Boolean = true,
+    val enableFloatingBottomBarBlur: Boolean = true,
     val pageScale: Float = 1.0f,
-    val isFirstLaunch: Boolean = false
+    val enablePredictiveBack: Boolean = true,
+    val isFirstLaunch: Boolean = false,
+    val selectedMainPage: Int = 0
 )
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
@@ -48,7 +50,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 "enable_floating_bottom_bar",
                 "enable_floating_bottom_bar_blur",
                 "ui_mode",
-                "page_scale"
+                "page_scale",
+                "enable_predictive_back"
             )
         ) {
             refreshSettings()
@@ -69,6 +72,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         val enableFloatingBottomBar = settingsRepository.enableFloatingBottomBar
         val enableFloatingBottomBarBlur = settingsRepository.enableFloatingBottomBarBlur
         val pageScale = settingsRepository.pageScale
+        val enablePredictiveBack = settingsRepository.enablePredictiveBack
         _uiState.update {
             it.copy(
                 appSettings = appSettings,
@@ -76,7 +80,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 enableBlur = enableBlur,
                 enableFloatingBottomBar = enableFloatingBottomBar,
                 enableFloatingBottomBarBlur = enableFloatingBottomBarBlur,
-                pageScale = pageScale
+                pageScale = pageScale,
+                enablePredictiveBack = enablePredictiveBack
             )
         }
     }
@@ -91,8 +96,19 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         _uiState.update { it.copy(isFirstLaunch = false) }
     }
 
+    fun setSelectedMainPage(page: Int) {
+        _uiState.update { it.copy(selectedMainPage = page.coerceIn(0, MainPagerConfig.PAGE_COUNT - 1)) }
+    }
+
     override fun onCleared() {
         settingsRepository.unregisterListener(prefsListener)
         super.onCleared()
     }
+}
+
+object MainPagerConfig {
+    const val PAGE_COUNT = 4
+    const val LAST_PAGE_INDEX = PAGE_COUNT - 1
+
+    fun coercePage(page: Int): Int = page.coerceIn(0, LAST_PAGE_INDEX)
 }

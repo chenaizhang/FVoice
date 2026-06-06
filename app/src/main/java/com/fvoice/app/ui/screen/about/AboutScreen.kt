@@ -36,9 +36,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.dropUnlessResumed
 import com.fvoice.app.R
 import com.fvoice.app.data.model.UiMode
 import com.fvoice.app.ui.component.FVoiceMiuixPage
+import com.fvoice.app.ui.navigation3.LocalNavigator
 import com.fvoice.app.ui.theme.LocalUiMode
 import top.yukonga.miuix.kmp.basic.Card as MiuixCard
 import top.yukonga.miuix.kmp.basic.Icon as MiuixIcon
@@ -64,9 +66,8 @@ data class AboutScreenActions(
 )
 
 @Composable
-fun AboutScreen(
-    onBack: () -> Unit,
-) {
+fun AboutScreen() {
+    val navigator = LocalNavigator.current
     val context = LocalContext.current
     val versionName = remember(context) {
         runCatching {
@@ -84,7 +85,9 @@ fun AboutScreen(
         appName = stringResource(R.string.app_name),
         versionName = versionName,
     )
-    val actions = AboutScreenActions(onBack = onBack)
+    val actions = AboutScreenActions(
+        onBack = dropUnlessResumed { navigator.pop() }
+    )
 
     when (LocalUiMode.current) {
         UiMode.Miuix -> AboutScreenMiuix(state, actions)

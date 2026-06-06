@@ -1,16 +1,53 @@
+# IDE
 *.iml
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Gradle / Kotlin
 .gradle/
+.kotlin/
 /local.properties
-/.idea/
-/.vscode/
-/.kotlin/
-.DS_Store
 /build
 app/build/
+
+# Android
 /captures
 .externalNativeBuild
 .cxx
 *.apk
 *.aab
+*.ap_
+*.aab_
+
+# Native
+*.o
+*.so
+*.lo
+*.la
+*.a
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Debug / Profiling
 *.hprof
+*.prof
 .ref
+
+# Temporary
+tmp/
+*.tmp
+*.temp
+*.bak
+*.log
+
+# Environment / Secrets
+*.keystore
+*.jks
+*.p12
+*.key
+secrets.properties

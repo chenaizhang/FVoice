@@ -16,6 +16,14 @@
     <string name="import_audio_summary">选择本地录音、播客或音频文件</string>
     <string name="home_import_video">导入视频</string>
     <string name="import_video_summary">从视频中提取音轨并继续处理</string>
+    <string name="home_start_recording">开始录音</string>
+    <string name="start_recording_summary">实时录制音频并处理</string>
+    <string name="recording_started">录音已开始（5秒后自动停止）</string>
+    <string name="recording_saved">录音已保存并加入处理队列</string>
+    <string name="model_download_guide_title">模型下载引导</string>
+    <string name="model_download_guide_whisper">Whisper 模型：从 HuggingFace 下载 ggml 格式 .bin 文件（如 ggml-tiny.bin）</string>
+    <string name="model_download_guide_vad">VAD 模型：下载 Silero VAD 的 ONNX 格式模型文件</string>
+    <string name="model_download_guide_denoise">降噪模型：下载 DeepFilterNet 的模型文件</string>
     <string name="home_recent_tasks">最近任务</string>
     <string name="permission_section">授权状态</string>
     <string name="permission_ready">核心权限已就绪，可进行文件处理与实时录音。</string>
@@ -65,12 +73,12 @@
     <string name="settings_color_style">配色样式</string>
     <string name="settings_enable_blur">启用模糊</string>
     <string name="settings_enable_blur_summary">启用顶部和底部栏的模糊效果。</string>
+    <string name="settings_enable_predictive_back">预测性返回手势</string>
+    <string name="settings_enable_predictive_back_summary">从屏幕边缘向内滑动时预览返回目标页面。</string>
     <string name="settings_floating_bottom_bar">悬浮底栏</string>
     <string name="settings_floating_bottom_bar_summary">使用 Apple 风格的浮动底部栏。</string>
     <string name="settings_enable_glass">液态玻璃</string>
     <string name="settings_enable_glass_summary">为浮动底部栏启用液态玻璃效果。</string>
-    <string name="settings_enable_predictive_back">预测性返回手势</string>
-    <string name="settings_enable_predictive_back_summary">从屏幕边缘向内滑动时预览返回目标页面。</string>
     <string name="settings_page_scale_summary">调整全局显示缩放。</string>
     <string name="settings_export_config">导出配置</string>
     <string name="settings_import_config">导入配置</string>
@@ -80,6 +88,7 @@
     <string name="settings_transcribe_model">转文字模型</string>
     <string name="settings_section_feedback">反馈与信息</string>
     <string name="settings_send_logs">发送日志</string>
+    <string name="save">保存</string>
     <string name="save_log">保存日志</string>
     <string name="send_log">发送日志</string>
     <string name="log_saved">日志已保存</string>
@@ -156,6 +165,7 @@
     <string name="stage_denoise">降噪处理</string>
     <string name="stage_transcribe">语音转写</string>
     <string name="stage_export">导出结果</string>
+    <string name="stage_merge_video">合成视频</string>
     <string name="stage_completed">已完成</string>
     <string name="stage_in_progress">进行中</string>
     <string name="stage_waiting">等待中</string>
@@ -170,8 +180,6 @@
     <string name="player_original">原始</string>
     <string name="player_denoised">降噪后</string>
     <string name="transcript_text">转写文本</string>
-    <string name="transcript_sample_1">今天我们主要讨论这个项目的安卓端架构。</string>
-    <string name="transcript_sample_2">降噪部分可以先采用本地模型，转写部分后续再加入多模型选择。</string>
     <string name="export_title">导出</string>
 
     <!-- Status -->
@@ -179,14 +187,34 @@
     <string name="status_processing">处理中</string>
     <string name="status_failed">失败</string>
     <string name="status_pending">待处理</string>
+    <string name="status_cancelled">已取消</string>
 
-    <!-- Welcome -->
-    <string name="welcome_slogan">清理噪声，保留人声</string>
-    <string name="welcome_desc">支持音频和视频文件降噪，并可生成文字稿、字幕和可分享的导出文件。默认优先本机处理。</string>
-    <string name="welcome_tag_local">本地优先</string>
-    <string name="welcome_tag_bilingual">中英双语</string>
-    <string name="welcome_tag_subtitle">字幕导出</string>
-    <string name="welcome_get_started">开始使用</string>
+    <!-- Error -->
+    <string name="error_task_already_running">已有任务正在处理，请等待当前任务完成</string>
+    <string name="error_invalid_input">无法读取输入文件</string>
+    <string name="error_media_probe_failed">媒体文件解析失败</string>
+    <string name="error_audio_decode_failed">音频解码失败</string>
+    <string name="error_audio_encode_failed">音频编码失败</string>
+    <string name="error_denoise_failed">降噪处理失败</string>
+    <string name="error_asr_failed">语音转写失败</string>
+    <string name="error_export_failed">导出失败</string>
+    <string name="error_model_not_available">模型不可用，请检查模型管理页面</string>
+    <string name="error_cancelled_by_user">用户取消</string>
+    <string name="error_storage_denied">存储访问被拒绝</string>
+    <string name="error_unknown">未知错误</string>
+    <string name="error_service_bind_failed">服务启动失败</string>
+    <string name="clear_history_title">清空历史</string>
+    <string name="clear_history_message">确定要清空所有历史任务吗？此操作不可撤销。</string>
+    <string name="delete_task_title">删除任务</string>
+    <string name="delete_task_message">确定要删除该任务吗？此操作不可撤销。</string>
+
+    <!-- Task Type -->
+    <string name="task_type_denoise">降噪</string>
+    <string name="task_type_transcribe">转写</string>
+    <string name="task_type_denoise_and_transcribe">降噪并转写</string>
+    <string name="task_type_extract_audio">提取音频</string>
+    <string name="task_type_realtime_record">实时录音</string>
+    <string name="task_type_realtime_transcribe">实时转写</string>
 
     <!-- Notification -->
     <string name="notification_channel_progress">处理进度</string>
@@ -194,7 +222,9 @@
     <string name="notification_channel_result">处理结果</string>
     <string name="notification_channel_result_desc">处理完成或失败的通知</string>
     <string name="notification_process_complete">处理完成</string>
+    <string name="notification_process_complete_with_file">%1$s 处理完成</string>
     <string name="notification_process_failed">处理失败</string>
+    <string name="notification_process_failed_reason">处理失败：%1$s</string>
 
     <!-- Service -->
     <string name="service_process_title">清声处理服务</string>

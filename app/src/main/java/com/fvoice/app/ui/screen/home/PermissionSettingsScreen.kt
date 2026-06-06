@@ -3,6 +3,7 @@ package com.fvoice.app.ui.screen.home
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.add
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -54,6 +56,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.dropUnlessResumed
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.fvoice.app.R
 import com.fvoice.app.data.model.UiMode
@@ -61,6 +64,7 @@ import com.fvoice.app.permission.PermissionManager
 import com.fvoice.app.permission.PermissionState
 import com.fvoice.app.ui.component.FVoiceMiuixCard
 import com.fvoice.app.ui.component.FVoiceMiuixInfoRow
+import com.fvoice.app.ui.navigation3.LocalNavigator
 import com.fvoice.app.ui.theme.LocalUiMode
 import top.yukonga.miuix.kmp.basic.Icon as MiuixIcon
 import top.yukonga.miuix.kmp.basic.IconButton as MiuixIconButton
@@ -76,9 +80,8 @@ import top.yukonga.miuix.kmp.utils.overScrollVertical
 import top.yukonga.miuix.kmp.utils.scrollEndHaptic
 
 @Composable
-fun PermissionSettingsScreen(
-    onBack: () -> Unit,
-) {
+fun PermissionSettingsScreen() {
+    val navigator = LocalNavigator.current
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val permissionManager = remember(context) { PermissionManager(context) }
@@ -93,6 +96,7 @@ fun PermissionSettingsScreen(
     ) {
         permissionManager.refresh()
     }
+    val onBack = dropUnlessResumed { navigator.pop() }
 
     DisposableEffect(lifecycleOwner, permissionManager) {
         val observer = LifecycleEventObserver { _, event ->
@@ -262,17 +266,22 @@ private fun PermissionRowMiuix(
         },
         icon = icon,
         end = {
-            if (granted) {
-                MiuixText(
-                    text = stringResource(R.string.permission_granted),
-                    color = MiuixTheme.colorScheme.primary,
-                    fontWeight = FontWeight.Medium
-                )
-            } else {
-                MiuixTextButton(
-                    text = stringResource(R.string.permission_grant_action),
-                    onClick = onClick
-                )
+            Box(
+                modifier = Modifier.defaultMinSize(minHeight = 40.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                if (granted) {
+                    MiuixText(
+                        text = stringResource(R.string.permission_granted),
+                        color = MiuixTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Medium
+                    )
+                } else {
+                    MiuixTextButton(
+                        text = stringResource(R.string.permission_grant_action),
+                        onClick = onClick
+                    )
+                }
             }
         }
     )
