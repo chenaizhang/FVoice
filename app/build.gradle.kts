@@ -14,32 +14,33 @@ android {
         minSdk = 26
         targetSdk = 35
         versionCode = 1
-        versionName = "0.1.0"
+        versionName = System.getenv("VERSION_NAME") ?: "0.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = rootProject.file("release.keystore")
+            storePassword = System.getenv("STORE_PASSWORD") ?: ""
+            keyAlias = System.getenv("KEY_ALIAS") ?: ""
+            keyPassword = System.getenv("KEY_PASSWORD") ?: ""
+        }
+    }
+
     buildTypes {
+        debug {
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-debug"
+        }
         release {
-            isMinifyEnabled = false
-            isShrinkResources = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            /*
-             * TODO: Configure release signing
-             * Create a keystore and add signing config:
-             *   signingConfigs {
-             *       create("release") {
-             *           storeFile = file("release.keystore")
-             *           storePassword = System.getenv("STORE_PASSWORD")
-             *           keyAlias = System.getenv("KEY_ALIAS")
-             *           keyPassword = System.getenv("KEY_PASSWORD")
-             *       }
-             *   }
-             *   release { signingConfig = signingConfigs.getByName("release") }
-             */
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 
