@@ -57,7 +57,7 @@
 
 ## 致谢
 
-- [Miuix](https://github.com/miuix-krteam/miuix) — 精美的 Compose UI 组件库
+- [Miuix](https://github.com/compose-miuix-ui/miuix) — 精美的 Compose UI 组件库
 - [whisper.cpp](https://github.com/ggerganov/whisper.cpp) — 高性能端侧语音识别
 - [DeepFilterNet](https://github.com/Rikorose/DeepFilterNet) — 实时语音增强
 - [Silero VAD](https://github.com/snakers4/silero-vad) — 轻量级语音活动检测
