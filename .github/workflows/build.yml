@@ -89,7 +89,13 @@ jobs:
           path: FVoice-release-${{ steps.version.outputs.version }}.apk
 
       # ---------- GitHub Release ----------
-      - name: Create/Update GitHub Release
+      - name: Delete old release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: gh release delete latest --yes --cleanup-tag 2>/dev/null; true
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Create GitHub Release
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v2
         with:
