@@ -1,15 +1,15 @@
 cmake_minimum_required(VERSION 3.22.1)
 cmake_policy(SET CMP0077 NEW)
-project("fvoice")
+project("clarivo")
 
 set(CMAKE_CXX_STANDARD 17)
 
 # =============================================================================
 # Core native library (always built)
 # =============================================================================
-add_library(fvoice-core SHARED fvoice_core.cpp)
+add_library(clarivo-core SHARED clarivo_core.cpp)
 find_library(log-lib log)
-target_link_libraries(fvoice-core ${log-lib})
+target_link_libraries(clarivo-core ${log-lib})
 
 # =============================================================================
 # RNNoise denoiser
@@ -31,9 +31,9 @@ target_include_directories(rnnoise PUBLIC rnnoise/include rnnoise/src)
 target_compile_definitions(rnnoise PRIVATE RNNOISE_BUILD)
 target_link_libraries(rnnoise m)
 
-add_library(fvoice-rnnoise SHARED fvoice_rnnoise.cpp)
-target_include_directories(fvoice-rnnoise PRIVATE rnnoise/include)
-target_link_libraries(fvoice-rnnoise rnnoise ${log-lib})
+add_library(clarivo-rnnoise SHARED clarivo_rnnoise.cpp)
+target_include_directories(clarivo-rnnoise PRIVATE rnnoise/include)
+target_link_libraries(clarivo-rnnoise rnnoise ${log-lib})
 
 # =============================================================================
 # DeepFilterNet denoiser
@@ -44,13 +44,13 @@ if(EXISTS "${DEEPFILTER_LIB}")
     add_library(deepfilter STATIC IMPORTED)
     set_target_properties(deepfilter PROPERTIES IMPORTED_LOCATION "${DEEPFILTER_LIB}")
 
-    add_library(fvoice-df SHARED fvoice_deepfilter.cpp)
-    target_include_directories(fvoice-df PRIVATE deepfilternet)
-    target_link_libraries(fvoice-df deepfilter ${log-lib} m dl)
+    add_library(clarivo-df SHARED clarivo_deepfilter.cpp)
+    target_include_directories(clarivo-df PRIVATE deepfilternet)
+    target_link_libraries(clarivo-df deepfilter ${log-lib} m dl)
 else()
     message(STATUS "DeepFilterNet libDF not found for ${CMAKE_ANDROID_ARCH_ABI}, building error-only JNI stub")
-    add_library(fvoice-df SHARED fvoice_deepfilter_stub.cpp)
-    target_link_libraries(fvoice-df ${log-lib})
+    add_library(clarivo-df SHARED clarivo_deepfilter_stub.cpp)
+    target_link_libraries(clarivo-df ${log-lib})
 endif()
 
 # =============================================================================
@@ -71,11 +71,11 @@ if(EXISTS "${CMAKE_SOURCE_DIR}/whisper.cpp/include/whisper.h")
     set(BUILD_SHARED_LIBS OFF)
     add_subdirectory(whisper.cpp whisper.cpp_build)
 
-    add_library(fvoice-whisper SHARED fvoice_whisper.cpp)
-    target_include_directories(fvoice-whisper PRIVATE whisper.cpp/include)
-    target_link_libraries(fvoice-whisper whisper ${log-lib})
+    add_library(clarivo-whisper SHARED clarivo_whisper.cpp)
+    target_include_directories(clarivo-whisper PRIVATE whisper.cpp/include)
+    target_link_libraries(clarivo-whisper whisper ${log-lib})
 else()
     message(STATUS "whisper.cpp not found, building Whisper stub")
-    add_library(fvoice-whisper SHARED fvoice_whisper_stub.cpp)
-    target_link_libraries(fvoice-whisper ${log-lib})
+    add_library(clarivo-whisper SHARED clarivo_whisper_stub.cpp)
+    target_link_libraries(clarivo-whisper ${log-lib})
 endif()

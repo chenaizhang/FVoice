@@ -1,4 +1,4 @@
-# ProGuard rules for FVoice
+# ProGuard rules for Clarivo
 
 # Keep Compose
 -keep class androidx.compose.** { *; }
@@ -19,7 +19,7 @@
 -keep class ai.onnxruntime.** { *; }
 
 # Keep JNI classes
--keep class com.fvoice.app.core.jni.** { *; }
+-keep class com.clarivo.app.core.jni.** { *; }
 
 # General Android
 -keep public class * extends android.app.Activity

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">FVoice</string>
+    <string name="app_name">Clarivo</string>
 
     <string name="nav_home">Home</string>
     <string name="nav_tasks">Tasks</string>
@@ -246,7 +246,7 @@
     <string name="notification_process_failed">Processing failed</string>
     <string name="notification_process_failed_reason">Processing failed: %1$s</string>
 
-    <string name="service_process_title">FVoice Processing Service</string>
+    <string name="service_process_title">Clarivo Processing Service</string>
     <string name="service_process_preparing">Preparing…</string>
     <string name="settings_theme_summary">Choose the app theme mode.</string>
     <string name="settings_theme_mode_system">Follow System</string>

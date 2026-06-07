@@ -1,13 +1,13 @@
-# 参与贡献 FVoice
+# 参与贡献 Clarivo
 
-感谢你对 FVoice 的关注！欢迎提交 Pull Request、Bug 报告和功能建议。
+感谢你对 Clarivo 的关注！欢迎提交 Pull Request、Bug 报告和功能建议。
 
 ## 开发环境
 
 1. **克隆仓库**
    ```bash
-   git clone https://github.com/chenaizhang/FVoice.git
-   cd FVoice
+   git clone https://github.com/chenaizhang/Clarivo.git
+   cd Clarivo
    ```
 
 2. **在 Android Studio 中打开**

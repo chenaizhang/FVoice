@@ -15,8 +15,8 @@
 
 ```bash
 # 1. 克隆仓库
-git clone https://github.com/chenaizhang/FVoice.git
-cd FVoice
+git clone https://github.com/chenaizhang/Clarivo.git
+cd Clarivo
 
 # 2. 使用 Gradle Wrapper 构建 Debug APK
 ./gradlew :app:assembleDebug
@@ -119,7 +119,7 @@ A: 检查网络连接，或尝试在 `settings.gradle.kts` 中添加国内镜像
 
 ### Q: 构建成功但运行时闪退
 
-A: 检查日志中的 `FVoiceException` 或 `UnsatisfiedLinkError`。若 native 库未加载，引擎会自动 fallback 到 Fake 模式，不应闪退。如有闪退，请提交 Issue 并附上完整日志。
+A: 检查日志中的 `ClarivoException` 或 `UnsatisfiedLinkError`。若 native 库未加载，引擎会自动 fallback 到 Fake 模式，不应闪退。如有闪退，请提交 Issue 并附上完整日志。
 
 ## 发布构建
 

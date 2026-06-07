@@ -15,8 +15,8 @@
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/chenaizhang/FVoice.git
-cd FVoice
+git clone https://github.com/chenaizhang/Clarivo.git
+cd Clarivo
 
 # 2. Build Debug APK with Gradle Wrapper
 ./gradlew :app:assembleDebug
@@ -119,7 +119,7 @@ A: Check your network connection, or try adding a mirror repository in `settings
 
 ### Q: Build succeeds but app crashes on launch
 
-A: Check logs for `FVoiceException` or `UnsatisfiedLinkError`. If the native library is not loaded, the engine automatically falls back to Fake mode and should not crash. If a crash occurs, please file an Issue with the full log.
+A: Check logs for `ClarivoException` or `UnsatisfiedLinkError`. If the native library is not loaded, the engine automatically falls back to Fake mode and should not crash. If a crash occurs, please file an Issue with the full log.
 
 ## Release Build
 

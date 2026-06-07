@@ -14,5 +14,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "FVoice"
+rootProject.name = "Clarivo"
 include(":app")

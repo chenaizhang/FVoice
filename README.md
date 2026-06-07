@@ -2,17 +2,17 @@
 
 <img alt="LOGO" src="logo.svg" width="128" height="128" />
 
-# 清声 / FVoice
+# 声澈 / Clarivo
 
 **在 Android 设备上本地完成音频降噪与语音转写**
 
 清理噪声，保留人声。所有处理默认在设备端完成，无需上传音频到云端。
 
-[![GitHub Release](https://img.shields.io/github/v/release/chenaizhang/FVoice?style=flat&label=Latest)](https://github.com/chenaizhang/FVoice/releases/latest)
-[![License](https://img.shields.io/github/license/chenaizhang/FVoice?style=flat)](LICENSE)
-[![GitHub Stars](https://img.shields.io/github/stars/chenaizhang/FVoice?style=flat)](https://github.com/chenaizhang/FVoice/stargazers)
+[![GitHub Release](https://img.shields.io/github/v/release/chenaizhang/Clarivo?style=flat&label=Latest)](https://github.com/chenaizhang/Clarivo/releases/latest)
+[![License](https://img.shields.io/github/license/chenaizhang/Clarivo?style=flat)](LICENSE)
+[![GitHub Stars](https://img.shields.io/github/stars/chenaizhang/Clarivo?style=flat)](https://github.com/chenaizhang/Clarivo/stargazers)
 
-[下载最新版](https://github.com/chenaizhang/FVoice/releases/latest) · [问题反馈](https://github.com/chenaizhang/FVoice/issues)
+[下载最新版](https://github.com/chenaizhang/Clarivo/releases/latest) · [问题反馈](https://github.com/chenaizhang/Clarivo/issues)
 
 **中文** | **[English](README_EN.md)**
 

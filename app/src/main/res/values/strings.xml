@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">清声</string>
+    <string name="app_name">声澈</string>
 
     <!-- Navigation -->
     <string name="nav_home">首页</string>
@@ -306,7 +306,7 @@
     <string name="notification_process_failed_reason">处理失败：%1$s</string>
 
     <!-- Service -->
-    <string name="service_process_title">清声处理服务</string>
+    <string name="service_process_title">声澈处理服务</string>
     <string name="service_process_preparing">准备中…</string>
     <string name="service_process_running">正在处理…</string>
 </resources>

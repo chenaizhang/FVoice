@@ -1,4 +1,4 @@
-# FVoice 待实现清单
+# Clarivo 待实现清单
 
 > 基于代码实际验证，仅列出确认未实现的项目。
 
@@ -28,7 +28,7 @@
 ### 导出
 - [ ] **视频回封装** — `MediaExportManager.kt:17` 仅 TODO 注释，降噪后音频写回原视频容器需 ffmpeg
 - [ ] **MP4/M4A 导出** — `MediaExportManager.kt:18` 仅 TODO 注释，当前仅支持 WAV 格式
-- [ ] **输出路径自定义** — `MediaExportManager.kt:19` 仅 TODO 注释，固定导出到 Downloads/FVoice，不支持 SAF 选择
+- [ ] **输出路径自定义** — `MediaExportManager.kt:19` 仅 TODO 注释，固定导出到 Downloads/Clarivo，不支持 SAF 选择
 
 ---
 

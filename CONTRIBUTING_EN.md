@@ -1,13 +1,13 @@
-# Contributing to FVoice
+# Contributing to Clarivo
 
-Thank you for your interest in contributing to FVoice! We welcome pull requests, bug reports, and feature suggestions.
+Thank you for your interest in contributing to Clarivo! We welcome pull requests, bug reports, and feature suggestions.
 
 ## Development Setup
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/chenaizhang/FVoice.git
-   cd FVoice
+   git clone https://github.com/chenaizhang/Clarivo.git
+   cd Clarivo
    ```
 
 2. **Open in Android Studio**

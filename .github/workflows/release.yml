@@ -44,13 +44,13 @@ jobs:
 
       - name: Rename debug APK
         run: |
-          find app/build/outputs/apk/debug -name "*.apk" -exec cp {} FVoice-debug-${{ steps.version.outputs.version }}.apk \;
+          find app/build/outputs/apk/debug -name "*.apk" -exec cp {} Clarivo-debug-${{ steps.version.outputs.version }}.apk \;
 
       - name: Upload debug APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: FVoice-debug-${{ steps.version.outputs.version }}
-          path: FVoice-debug-${{ steps.version.outputs.version }}.apk
+          name: Clarivo-debug-${{ steps.version.outputs.version }}
+          path: Clarivo-debug-${{ steps.version.outputs.version }}.apk
 
       # ---------- Release APK ----------
       - name: Decode keystore
@@ -69,31 +69,31 @@ jobs:
 
       - name: Rename release APK
         run: |
-          find app/build/outputs/apk/release -name "*.apk" -exec cp {} FVoice-release-${{ steps.version.outputs.version }}.apk \;
+          find app/build/outputs/apk/release -name "*.apk" -exec cp {} Clarivo-release-${{ steps.version.outputs.version }}.apk \;
 
       - name: Upload release APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: FVoice-release-${{ steps.version.outputs.version }}
-          path: FVoice-release-${{ steps.version.outputs.version }}.apk
+          name: Clarivo-release-${{ steps.version.outputs.version }}
+          path: Clarivo-release-${{ steps.version.outputs.version }}.apk
 
       # ---------- GitHub Release ----------
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.version.outputs.tag }}
-          name: "FVoice ${{ steps.version.outputs.version }}"
+          name: "Clarivo ${{ steps.version.outputs.version }}"
           body: |
             > **Version** `${{ steps.version.outputs.version }}`
             > **Commit** `${{ github.sha }}`
 
             | File | Type |
             |------|------|
-            | `FVoice-debug-${{ steps.version.outputs.version }}.apk` | Debug |
-            | `FVoice-release-${{ steps.version.outputs.version }}.apk` | Release |
+            | `Clarivo-debug-${{ steps.version.outputs.version }}.apk` | Debug |
+            | `Clarivo-release-${{ steps.version.outputs.version }}.apk` | Release |
           prerelease: false
           files: |
-            FVoice-debug-${{ steps.version.outputs.version }}.apk
-            FVoice-release-${{ steps.version.outputs.version }}.apk
+            Clarivo-debug-${{ steps.version.outputs.version }}.apk
+            Clarivo-release-${{ steps.version.outputs.version }}.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -19,13 +19,13 @@
     <uses-sdk tools:overrideLibrary="top.yukonga.miuix.kmp.blur" />
 
     <application
-        android:name=".FVoiceApplication"
+        android:name=".ClarivoApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.FVoice"
+        android:theme="@style/Theme.Clarivo"
         android:enableOnBackInvokedCallback="true"
         tools:targetApi="37">
 
@@ -33,7 +33,7 @@
             android:name=".MainActivity"
             android:exported="true"
             android:launchMode="singleTop"
-            android:theme="@style/Theme.FVoice">
+            android:theme="@style/Theme.Clarivo">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

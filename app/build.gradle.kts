@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.fvoice.app"
+    namespace = "com.clarivo.app"
     compileSdk = 37
 
     defaultConfig {
-        applicationId = "com.fvoice.app"
+        applicationId = "com.clarivo.app"
         minSdk = 26
         targetSdk = 35
         versionCode = 1

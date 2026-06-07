@@ -2,17 +2,17 @@
 
 <img alt="LOGO" src="logo.svg" width="128" height="128" />
 
-# FVoice / 清声
+# Clarivo / 声澈
 
 **Local audio denoising and speech-to-text on Android**
 
 Clean noise, keep voice. All processing runs on-device by default — no cloud upload required.
 
-[![GitHub Release](https://img.shields.io/github/v/release/chenaizhang/FVoice?style=flat&label=Latest)](https://github.com/chenaizhang/FVoice/releases/latest)
-[![License](https://img.shields.io/github/license/chenaizhang/FVoice?style=flat)](LICENSE)
-[![GitHub Stars](https://img.shields.io/github/stars/chenaizhang/FVoice?style=flat)](https://github.com/chenaizhang/FVoice/stargazers)
+[![GitHub Release](https://img.shields.io/github/v/release/chenaizhang/Clarivo?style=flat&label=Latest)](https://github.com/chenaizhang/Clarivo/releases/latest)
+[![License](https://img.shields.io/github/license/chenaizhang/Clarivo?style=flat)](LICENSE)
+[![GitHub Stars](https://img.shields.io/github/stars/chenaizhang/Clarivo?style=flat)](https://github.com/chenaizhang/Clarivo/stargazers)
 
-[Download Latest](https://github.com/chenaizhang/FVoice/releases/latest) · [Issues](https://github.com/chenaizhang/FVoice/issues)
+[Download Latest](https://github.com/chenaizhang/Clarivo/releases/latest) · [Issues](https://github.com/chenaizhang/Clarivo/issues)
 
 **English** | **[中文](README.md)**
 
