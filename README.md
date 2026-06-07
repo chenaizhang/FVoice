@@ -8,9 +8,9 @@
 
 清理噪声，保留人声。所有处理默认在设备端完成，无需上传音频到云端。
 
-[![GitHub Release](https://img.shields.io/github/v/release/chenaizhang/FVoice?style=flat-square&label=Latest)](https://github.com/chenaizhang/FVoice/releases/latest)
-[![License](https://img.shields.io/github/license/chenaizhang/FVoice?style=flat-square)](LICENSE)
-[![GitHub Stars](https://img.shields.io/github/stars/chenaizhang/FVoice?style=flat-square)](https://github.com/chenaizhang/FVoice/stargazers)
+[![GitHub Release](https://img.shields.io/github/v/release/chenaizhang/FVoice?style=flat&label=Latest)](https://github.com/chenaizhang/FVoice/releases/latest)
+[![License](https://img.shields.io/github/license/chenaizhang/FVoice?style=flat)](LICENSE)
+[![GitHub Stars](https://img.shields.io/github/stars/chenaizhang/FVoice?style=flat)](https://github.com/chenaizhang/FVoice/stargazers)
 
 [下载最新版](https://github.com/chenaizhang/FVoice/releases/latest) · [问题反馈](https://github.com/chenaizhang/FVoice/issues)
 
