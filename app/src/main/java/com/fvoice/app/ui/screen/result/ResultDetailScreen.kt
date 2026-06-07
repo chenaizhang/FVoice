@@ -340,7 +340,7 @@ private fun ResultSummaryMaterial(
 ) {
     Column {
         Text(
-            text = sourceFileName.ifBlank { "Unknown" },
+            text = sourceFileName.ifBlank { stringResource(R.string.result_unknown_file) },
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.SemiBold,
             modifier = Modifier.basicMarquee()
@@ -482,7 +482,7 @@ private fun ResultTranscriptMaterialCard(segments: List<TranscriptSegment>) {
             )
             if (segments.isEmpty()) {
                 Text(
-                    text = "暂无转写结果",
+                    text = stringResource(R.string.result_no_transcript),
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             } else {
@@ -556,7 +556,7 @@ private fun ResultSummaryMiuixCard(
     status: ProcessTaskStatus,
     errorMessage: String,
 ) {
-    val title = sourceFileName.ifBlank { "Unknown" }
+    val title = sourceFileName.ifBlank { stringResource(R.string.result_unknown_file) }
     val summary = if (status == ProcessTaskStatus.FAILED && errorMessage.isNotBlank()) {
         errorMessage
     } else {
@@ -696,7 +696,7 @@ private fun ResultTranscriptMiuixCard(segments: List<TranscriptSegment>) {
     FVoiceMiuixCard {
         if (segments.isEmpty()) {
             MiuixText(
-                text = "暂无转写结果",
+                text = stringResource(R.string.result_no_transcript),
                 color = MiuixTheme.colorScheme.onSurfaceVariantSummary
             )
         } else {
@@ -802,7 +802,7 @@ private fun ExportFormatMiuixRow(
         )
         if (selected) {
             MiuixText(
-                text = "OK",
+                text = stringResource(R.string.result_selected),
                 color = MiuixTheme.colorScheme.primary,
                 fontWeight = FontWeight.SemiBold
             )
@@ -837,7 +837,7 @@ private fun openOutputFile(context: android.content.Context, fileInfo: OutputFil
         }
         context.startActivity(intent)
     } catch (e: Exception) {
-        Toast.makeText(context, "无法打开文件", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, context.getString(R.string.error_cannot_open_file), Toast.LENGTH_SHORT).show()
     }
 }
 
@@ -880,9 +880,9 @@ private fun copyFileToUri(context: android.content.Context, sourceUri: Uri, dest
                 input.copyTo(output)
             }
         }
-        Toast.makeText(context, "保存成功", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, context.getString(R.string.save_success), Toast.LENGTH_SHORT).show()
     } catch (e: Exception) {
-        Toast.makeText(context, "保存失败: ${e.message}", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, context.getString(R.string.save_failed, e.message ?: ""), Toast.LENGTH_SHORT).show()
     }
 }
 
@@ -904,7 +904,7 @@ private fun SaveToLocalMaterialButton(
             onClick = { saveLauncher.launch(targetFile.fileName) },
             modifier = modifier.fillMaxWidth()
         ) {
-            Text("保存到本地")
+            Text(stringResource(R.string.save_to_local))
         }
     }
 }
@@ -927,7 +927,7 @@ private fun SaveToLocalMiuixButton(
             onClick = { saveLauncher.launch(targetFile.fileName) },
             modifier = modifier.fillMaxWidth()
         ) {
-            MiuixText("保存到本地")
+            MiuixText(stringResource(R.string.save_to_local))
         }
     }
 }

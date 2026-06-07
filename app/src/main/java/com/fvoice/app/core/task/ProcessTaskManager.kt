@@ -1,6 +1,7 @@
 package com.fvoice.app.core.task
 
 import android.content.Context
+import android.content.res.Configuration
 import android.net.Uri
 import com.fvoice.app.R
 import com.fvoice.app.core.asr.TranscriptExporter
@@ -192,7 +193,7 @@ class ProcessTaskManager private constructor(context: Context) {
 
         try {
             // Stage 1: Probe
-            emitProgress(5, appContext.getString(R.string.stage_read_file))
+            emitProgress(5, getLocalizedString(R.string.stage_read_file))
             val mediaInfo = withContext(Dispatchers.IO) {
                 mediaProbe.probe(sourceUri, task.sourceFileName)
             } ?: throw com.fvoice.app.core.exception.FVoiceException.MediaProbeFailed("Cannot probe file")
@@ -210,7 +211,7 @@ class ProcessTaskManager private constructor(context: Context) {
             }
 
             // Stage 2: Decode/extract audio to the sample rate required by the selected engine.
-            emitProgress(15, appContext.getString(R.string.stage_extract_audio))
+            emitProgress(15, getLocalizedString(R.string.stage_extract_audio))
             val audioFile = File(tempDir, OutputNameGenerator.generate(
                 task.sourceFileName,
                 OutputNameGenerator.ProcessType.EXTRACTED_AUDIO,
@@ -232,7 +233,7 @@ class ProcessTaskManager private constructor(context: Context) {
 
             // Stage 3: Denoise
             if (task.type == ProcessTaskType.DENOISE || task.type == ProcessTaskType.DENOISE_AND_TRANSCRIBE) {
-                emitProgress(40, appContext.getString(R.string.stage_denoise))
+                emitProgress(40, getLocalizedString(R.string.stage_denoise))
                 val denoisedWav = File(tempDir, OutputNameGenerator.generate(
                     task.sourceFileName,
                     OutputNameGenerator.ProcessType.DENOISED,
@@ -276,7 +277,7 @@ class ProcessTaskManager private constructor(context: Context) {
 
                 // If source is video, mux denoised audio back into video
                 if (mediaInfo.isVideo) {
-                    emitProgress(55, appContext.getString(R.string.stage_merge_video))
+                    emitProgress(55, getLocalizedString(R.string.stage_merge_video))
                     val mergedVideo = File(tempDir, OutputNameGenerator.generate(
                         task.sourceFileName,
                         OutputNameGenerator.ProcessType.DENOISED_VIDEO,
@@ -306,7 +307,7 @@ class ProcessTaskManager private constructor(context: Context) {
 
             // Stage 4: Transcribe
             if (task.type == ProcessTaskType.TRANSCRIBE || task.type == ProcessTaskType.DENOISE_AND_TRANSCRIBE) {
-                emitProgress(70, appContext.getString(R.string.stage_transcribe))
+                emitProgress(70, getLocalizedString(R.string.stage_transcribe))
 
                 val vadSegments = if (task.settings.useVad && targetSampleRate == 16000) {
                     val vadModel = modelManager.models.value.find { it.type == com.fvoice.app.core.model.ModelType.VAD_SILERO }
@@ -343,7 +344,7 @@ class ProcessTaskManager private constructor(context: Context) {
                 token.throwIfCancelled()
 
                 // Export transcripts
-                emitProgress(90, appContext.getString(R.string.stage_export))
+                emitProgress(90, getLocalizedString(R.string.stage_export))
                 task.settings.outputFormats.forEach { format ->
                     val ext = format.lowercase()
                     val outFile = File(tempDir, OutputNameGenerator.generate(
@@ -371,7 +372,7 @@ class ProcessTaskManager private constructor(context: Context) {
             }
 
             // Stage 5: Complete
-            emitProgress(100, appContext.getString(R.string.stage_completed))
+            emitProgress(100, getLocalizedString(R.string.stage_completed))
             queue.completeTask(task.id)
             val completedTask = queue.currentTask.value ?: task
             stateStore.archiveTask(completedTask)
@@ -449,6 +450,12 @@ class ProcessTaskManager private constructor(context: Context) {
             ?: readyModels.find {
                 it.type == ModelType.DENOISE_DEEPFILTERNET || it.type == ModelType.DENOISE_RNNOISE
             }
+    }
+
+    private fun getLocalizedString(resId: Int): String {
+        val config = Configuration(appContext.resources.configuration)
+        config.setLocale(java.util.Locale.getDefault())
+        return appContext.createConfigurationContext(config).getString(resId)
     }
 
     private fun emitProgress(percent: Int, stage: String) {

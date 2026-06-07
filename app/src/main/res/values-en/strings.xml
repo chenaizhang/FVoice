@@ -65,6 +65,9 @@
     <string name="settings_transcribe_model">Transcribe Model</string>
     <string name="settings_send_logs">Send Logs</string>
     <string name="save">Save</string>
+    <string name="save_to_local">Save to device</string>
+    <string name="save_success">Saved successfully</string>
+    <string name="save_failed">Save failed: %1$s</string>
     <string name="save_log">Save Log</string>
     <string name="send_log">Send Log</string>
     <string name="log_saved">Log saved</string>
@@ -106,6 +109,35 @@
     <string name="page_scale">Page Scale</string>
 
     <string name="model_standard">Standard Model</string>
+    <string name="model_import_success">Import successful</string>
+    <string name="model_import_failed">Import failed: %1$s</string>
+    <string name="model_import_failed_simple">Import failed</string>
+    <string name="model_installed">Installed %1$s</string>
+    <string name="model_empty">No %1$s, import below</string>
+    <string name="model_import_title">Import %1$s</string>
+    <string name="model_bundled">Bundled model (cannot delete)</string>
+    <string name="model_current">Current</string>
+    <string name="model_set_as_current">Set as current</string>
+    <string name="model_delete">Delete</string>
+    <string name="model_denoise_category">Denoise Model</string>
+    <string name="model_transcribe_category">Transcribe Model</string>
+    <string name="model_builtin_native">Built-in native</string>
+    <string name="model_import_denoise">Import denoise model</string>
+    <string name="model_import_whisper">Import Whisper model (.bin)</string>
+    <string name="model_import_vad">Import VAD model (.onnx)</string>
+    <string name="model_not_installed">Not installed</string>
+
+    <string name="update_latest_version">Latest version: v%1$s</string>
+    <string name="update_already_latest">Already up to date</string>
+    <string name="update_check_failed">Update check failed: %1$s</string>
+
+    <string name="config_exported">Configuration exported</string>
+    <string name="config_export_failed">Export failed: %1$s</string>
+    <string name="config_imported">Configuration imported</string>
+    <string name="config_import_failed">Import failed: %1$s</string>
+
+    <string name="task_type_file">File</string>
+    <string name="task_type_realtime">Realtime</string>
 
     <string name="process_settings_title">Process Settings</string>
     <string name="process_settings_subtitle">Choose process mode, denoise strength and transcription output</string>
@@ -113,6 +145,37 @@
     <string name="process_mode_summary">Results will be generated with this workflow</string>
     <string name="denoise_strength">Denoise Strength</string>
     <string name="start_process">Start Processing</string>
+
+    <string name="process_mode_denoise_and_transcribe">Denoise &amp; Transcribe</string>
+    <string name="process_mode_denoise_only">Denoise Only</string>
+    <string name="process_mode_transcribe_only">Transcribe Only</string>
+
+    <string name="denoise_strength_standard">Standard</string>
+    <string name="denoise_strength_strong">Strong</string>
+    <string name="denoise_strength_custom">Custom</string>
+
+    <string name="model_choice_default">Default</string>
+    <string name="model_choice_custom">Custom</string>
+
+    <string name="denoise_model_label">Denoise Model</string>
+    <string name="transcribe_model_label">Transcribe Model</string>
+    <string name="transcribe_language_label">Transcribe Language</string>
+    <string name="audio_preview_label">Audio Preview</string>
+
+    <string name="player_play">Play</string>
+    <string name="player_pause">Pause</string>
+    <string name="player_fullscreen">Fullscreen</string>
+    <string name="player_exit_fullscreen">Exit fullscreen</string>
+
+    <string name="denoise_description_format">Actual model: %1$s</string>
+    <string name="denoise_no_model">No denoise model available</string>
+    <string name="asr_default_description">Default: using the current default transcribe model. Actual model: %1$s.</string>
+    <string name="asr_custom_description">Custom: using your imported transcribe model. Actual model: %1$s.</string>
+    <string name="asr_custom_missing_description">Custom: no imported transcribe model found, using default. Actual model: %1$s.</string>
+    <string name="asr_no_model">No transcribe model available</string>
+
+    <string name="file_edit_time">Modified: %1$s</string>
+    <string name="file_edit_time_unknown">Modified: unknown</string>
 
     <string name="processing_title">Processing</string>
     <string name="processing_current_stage">Current stage: %1$s</string>
@@ -125,6 +188,8 @@
     <string name="stage_completed">Completed</string>
     <string name="stage_in_progress">In Progress</string>
     <string name="stage_waiting">Waiting</string>
+    <string name="stage_ok">Done</string>
+    <string name="no_logs_yet">No logs yet…</string>
     <string name="show_log">Show Log</string>
     <string name="hide_log">Hide Log</string>
     <string name="cancel">Cancel</string>
@@ -136,6 +201,9 @@
     <string name="player_denoised">Denoised</string>
     <string name="transcript_text">Transcript</string>
     <string name="export_title">Export</string>
+    <string name="result_unknown_file">Unknown file</string>
+    <string name="result_no_transcript">No transcript result</string>
+    <string name="result_selected">Selected</string>
 
     <string name="status_completed">Completed</string>
     <string name="status_processing">Processing</string>
@@ -155,6 +223,7 @@
     <string name="error_cancelled_by_user">Cancelled by user</string>
     <string name="error_storage_denied">Storage access denied</string>
     <string name="error_unknown">Unknown error</string>
+    <string name="error_cannot_open_file">Cannot open file</string>
     <string name="error_service_bind_failed">Service start failed</string>
     <string name="clear_history_title">Clear History</string>
     <string name="clear_history_message">Are you sure you want to clear all history tasks? This action cannot be undone.</string>
@@ -179,5 +248,39 @@
 
     <string name="service_process_title">FVoice Processing Service</string>
     <string name="service_process_preparing">Preparing…</string>
+    <string name="settings_theme_summary">Choose the app theme mode.</string>
+    <string name="settings_theme_mode_system">Follow System</string>
+    <string name="settings_theme_mode_light">Light</string>
+    <string name="settings_theme_mode_dark">Dark</string>
+    <string name="settings_monet">Enable Monet</string>
+    <string name="settings_key_color_default">Default</string>
+    <string name="settings_color_style">Palette Style</string>
+    <string name="settings_color_spec">Color Spec</string>
+    <string name="settings_enable_blur_summary">Enable blur effect on top and bottom bars.</string>
+    <string name="settings_floating_bottom_bar">Floating Bottom Bar</string>
+    <string name="settings_floating_bottom_bar_summary">Use Apple-style floating bottom bar.</string>
+    <string name="settings_enable_glass">Liquid Glass</string>
+    <string name="settings_enable_glass_summary">Enable liquid glass effect for the floating bottom bar.</string>
+    <string name="settings_page_scale">Page Scale</string>
+    <string name="settings_section_app">App</string>
+    <string name="settings_section_model">Models</string>
+    <string name="settings_section_feedback">Feedback &amp; Info</string>
+
+    <string name="color_red">Red</string>
+    <string name="color_pink">Pink</string>
+    <string name="color_purple">Purple</string>
+    <string name="color_deep_purple">Deep Purple</string>
+    <string name="color_indigo">Indigo</string>
+    <string name="color_blue">Blue</string>
+    <string name="color_cyan">Cyan</string>
+    <string name="color_teal">Teal</string>
+    <string name="color_green">Green</string>
+    <string name="color_yellow">Yellow</string>
+    <string name="color_amber">Amber</string>
+    <string name="color_orange">Orange</string>
+    <string name="color_brown">Brown</string>
+    <string name="color_blue_grey">Blue Grey</string>
+    <string name="color_sakura">Sakura</string>
+
     <string name="service_process_running">Processing…</string>
 </resources>

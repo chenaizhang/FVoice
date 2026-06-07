@@ -89,6 +89,9 @@
     <string name="settings_section_feedback">反馈与信息</string>
     <string name="settings_send_logs">发送日志</string>
     <string name="save">保存</string>
+    <string name="save_to_local">保存到本地</string>
+    <string name="save_success">保存成功</string>
+    <string name="save_failed">保存失败: %1$s</string>
     <string name="save_log">保存日志</string>
     <string name="send_log">发送日志</string>
     <string name="log_saved">日志已保存</string>
@@ -148,6 +151,38 @@
 
     <!-- Model -->
     <string name="model_standard">标准模型</string>
+    <string name="model_import_success">导入成功</string>
+    <string name="model_import_failed">导入失败: %1$s</string>
+    <string name="model_import_failed_simple">导入失败</string>
+    <string name="model_installed">已安装%1$s</string>
+    <string name="model_empty">暂无%1$s，请在下方导入</string>
+    <string name="model_import_title">导入%1$s</string>
+    <string name="model_bundled">内置模型（不可删除）</string>
+    <string name="model_current">当前</string>
+    <string name="model_set_as_current">设为当前</string>
+    <string name="model_delete">删除</string>
+    <string name="model_denoise_category">降噪模型</string>
+    <string name="model_transcribe_category">转文字模型</string>
+    <string name="model_builtin_native">内置 native</string>
+    <string name="model_import_denoise">导入降噪模型</string>
+    <string name="model_import_whisper">导入 Whisper 模型 (.bin)</string>
+    <string name="model_import_vad">导入 VAD 模型 (.onnx)</string>
+    <string name="model_not_installed">未安装</string>
+
+    <!-- Update -->
+    <string name="update_latest_version">最新版本: v%1$s</string>
+    <string name="update_already_latest">当前已是最新版本</string>
+    <string name="update_check_failed">检查更新失败: %1$s</string>
+
+    <!-- Config backup -->
+    <string name="config_exported">配置已导出</string>
+    <string name="config_export_failed">导出失败：%1$s</string>
+    <string name="config_imported">配置已导入</string>
+    <string name="config_import_failed">导入失败：%1$s</string>
+
+    <!-- Task type -->
+    <string name="task_type_file">文件</string>
+    <string name="task_type_realtime">实时</string>
 
     <!-- Process -->
     <string name="process_settings_title">处理设置</string>
@@ -156,6 +191,44 @@
     <string name="process_mode_summary">处理流程会按此模式生成结果</string>
     <string name="denoise_strength">降噪强度</string>
     <string name="start_process">开始处理</string>
+
+    <!-- Process Mode -->
+    <string name="process_mode_denoise_and_transcribe">降噪并转写</string>
+    <string name="process_mode_denoise_only">仅降噪</string>
+    <string name="process_mode_transcribe_only">仅转写</string>
+
+    <!-- Denoise Strength -->
+    <string name="denoise_strength_standard">标准</string>
+    <string name="denoise_strength_strong">强力</string>
+    <string name="denoise_strength_custom">自定义</string>
+
+    <!-- Model Choice -->
+    <string name="model_choice_default">默认</string>
+    <string name="model_choice_custom">自定义</string>
+
+    <!-- Labels -->
+    <string name="denoise_model_label">降噪模型</string>
+    <string name="transcribe_model_label">转写模型</string>
+    <string name="transcribe_language_label">转写语言</string>
+    <string name="audio_preview_label">音频预览</string>
+
+    <!-- Player -->
+    <string name="player_play">播放</string>
+    <string name="player_pause">暂停</string>
+    <string name="player_fullscreen">全屏</string>
+    <string name="player_exit_fullscreen">退出全屏</string>
+
+    <!-- Descriptions -->
+    <string name="denoise_description_format">实际模型：%1$s</string>
+    <string name="denoise_no_model">暂无可用降噪模型</string>
+    <string name="asr_default_description">默认：使用当前默认转写模型。 实际使用模型：%1$s。</string>
+    <string name="asr_custom_description">自定义：使用你导入的转写模型。 实际使用模型：%1$s。</string>
+    <string name="asr_custom_missing_description">自定义：未找到已导入的自定义转写模型，暂时使用默认模型。 实际使用模型：%1$s。</string>
+    <string name="asr_no_model">暂无可用转写模型</string>
+
+    <!-- File info -->
+    <string name="file_edit_time">编辑时间：%1$s</string>
+    <string name="file_edit_time_unknown">编辑时间：未知</string>
 
     <!-- Processing -->
     <string name="processing_title">正在处理</string>
@@ -169,6 +242,8 @@
     <string name="stage_completed">已完成</string>
     <string name="stage_in_progress">进行中</string>
     <string name="stage_waiting">等待中</string>
+    <string name="stage_ok">完成</string>
+    <string name="no_logs_yet">暂无日志…</string>
     <string name="show_log">显示日志</string>
     <string name="hide_log">隐藏日志</string>
     <string name="cancel">取消</string>
@@ -181,6 +256,9 @@
     <string name="player_denoised">降噪后</string>
     <string name="transcript_text">转写文本</string>
     <string name="export_title">导出</string>
+    <string name="result_unknown_file">未知文件</string>
+    <string name="result_no_transcript">暂无转写结果</string>
+    <string name="result_selected">已选</string>
 
     <!-- Status -->
     <string name="status_completed">已完成</string>
@@ -202,6 +280,7 @@
     <string name="error_cancelled_by_user">用户取消</string>
     <string name="error_storage_denied">存储访问被拒绝</string>
     <string name="error_unknown">未知错误</string>
+    <string name="error_cannot_open_file">无法打开文件</string>
     <string name="error_service_bind_failed">服务启动失败</string>
     <string name="clear_history_title">清空历史</string>
     <string name="clear_history_message">确定要清空所有历史任务吗？此操作不可撤销。</string>

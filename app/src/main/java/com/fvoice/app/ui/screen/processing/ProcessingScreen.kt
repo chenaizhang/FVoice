@@ -95,6 +95,7 @@ fun ProcessingScreen(
         stringResource(R.string.stage_read_file),
         stringResource(R.string.stage_extract_audio),
         stringResource(R.string.stage_denoise),
+        stringResource(R.string.stage_merge_video),
         stringResource(R.string.stage_transcribe),
         stringResource(R.string.stage_export)
     )
@@ -257,7 +258,7 @@ fun ProcessingScreen(
                 Card(modifier = Modifier.fillMaxWidth()) {
                     Column(modifier = Modifier.padding(12.dp)) {
                         if (uiState.logs.isEmpty()) {
-                            Text("No logs yet...", style = MaterialTheme.typography.bodySmall)
+                            Text(stringResource(R.string.no_logs_yet), style = MaterialTheme.typography.bodySmall)
                         } else {
                             uiState.logs.forEach { logLine ->
                                 Text(logLine, style = MaterialTheme.typography.bodySmall)
@@ -339,7 +340,7 @@ private fun ProcessingStagesMiuixCard(
                 summary = statusText,
                 end = {
                     MiuixText(
-                        text = if (index < currentStage) "OK" else if (index == currentStage) "${progress}%" else "--",
+                        text = if (index < currentStage) stringResource(R.string.stage_ok) else if (index == currentStage) "${progress}%" else "--",
                         color = when {
                             index < currentStage -> MiuixTheme.colorScheme.primary
                             index == currentStage -> MiuixTheme.colorScheme.secondaryVariant
@@ -356,7 +357,7 @@ private fun ProcessingStagesMiuixCard(
 private fun ProcessingLogMiuixCard(logs: List<String>) {
     FVoiceMiuixCard {
         if (logs.isEmpty()) {
-            MiuixText("No logs yet...")
+            MiuixText(stringResource(R.string.no_logs_yet))
         } else {
             logs.forEach { logLine ->
                 MiuixText(logLine, fontSize = 13.sp)

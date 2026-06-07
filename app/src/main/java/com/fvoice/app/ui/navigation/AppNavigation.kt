@@ -27,6 +27,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
+import android.net.Uri
+import android.provider.OpenableColumns
 import kotlinx.coroutines.launch
 import androidx.navigation3.runtime.NavEntryDecorator
 import androidx.navigation3.runtime.NavKey
@@ -283,11 +285,12 @@ private fun MainPager(
                 when (MainPagerTab.entries[page]) {
                     MainPagerTab.Home -> {
                         val homeViewModel: HomeViewModel = viewModel()
+                        val context = LocalContext.current
                         val audioLauncher = rememberLauncherForActivityResult(
                             ActivityResultContracts.OpenDocument()
                         ) { uri ->
                             if (uri != null) {
-                                val name = uri.lastPathSegment?.substringAfterLast('/') ?: "audio_file"
+                                val name = uri.queryDisplayName(context, "audio_file")
                                 navigator.push(Route.ProcessSettings(sourceUri = uri.toString(), fileName = name))
                             }
                         }
@@ -295,7 +298,7 @@ private fun MainPager(
                             ActivityResultContracts.OpenDocument()
                         ) { uri ->
                             if (uri != null) {
-                                val name = uri.lastPathSegment?.substringAfterLast('/') ?: "video_file"
+                                val name = uri.queryDisplayName(context, "video_file")
                                 navigator.push(Route.ProcessSettings(sourceUri = uri.toString(), fileName = name))
                             }
                         }
@@ -425,4 +428,18 @@ private fun MainScreenWithNavBar(
             }
         }
     }
+}
+
+private fun Uri.queryDisplayName(context: android.content.Context, fallback: String): String {
+    val cursor = context.contentResolver.query(this, null, null, null, null)
+    cursor?.use {
+        if (it.moveToFirst()) {
+            val nameIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+            if (nameIndex >= 0) {
+                val name = it.getString(nameIndex)
+                if (name != null && name.isNotBlank()) return name
+            }
+        }
+    }
+    return lastPathSegment?.substringAfterLast('/') ?: fallback
 }

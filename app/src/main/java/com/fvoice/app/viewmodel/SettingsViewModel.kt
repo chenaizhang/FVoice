@@ -2,6 +2,8 @@ package com.fvoice.app.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fvoice.app.FVoiceApplication
+import com.fvoice.app.R
 import com.fvoice.app.ui.theme.ColorMode
 import com.fvoice.app.data.model.UiMode
 import com.fvoice.app.data.preferences.SettingsRepositoryImpl
@@ -176,10 +178,11 @@ class SettingsViewModel : ViewModel() {
                 val json = org.json.JSONObject(response)
                 val latestTag = json.optString("tag_name", "").removePrefix("v")
                 val currentVersion = com.fvoice.app.BuildConfig.VERSION_NAME
+                val ctx = FVoiceApplication.instance
                 val hasUpdate = latestTag.isNotBlank() && latestTag != currentVersion
-                onResult(hasUpdate, if (hasUpdate) "最新版本: v$latestTag" else "当前已是最新版本")
+                onResult(hasUpdate, if (hasUpdate) ctx.getString(R.string.update_latest_version, latestTag) else ctx.getString(R.string.update_already_latest))
             } catch (e: Exception) {
-                onResult(false, "检查更新失败: ${e.message}")
+                onResult(false, FVoiceApplication.instance.getString(R.string.update_check_failed, e.message ?: ""))
             }
         }
     }
@@ -216,9 +219,9 @@ class SettingsViewModel : ViewModel() {
                 .put("language", settingsRepository.language)
                 .put("enable_predictive_back", settingsRepository.enablePredictiveBack)
             outputStream.bufferedWriter().use { it.write(json.toString(2)) }
-            setBackupMessage("配置已导出")
+            setBackupMessage(FVoiceApplication.instance.getString(R.string.config_exported))
         }.onFailure {
-            setBackupMessage("导出失败：${it.message ?: "未知错误"}")
+            setBackupMessage(FVoiceApplication.instance.getString(R.string.config_export_failed, it.message ?: FVoiceApplication.instance.getString(R.string.error_unknown)))
         }
     }
 
@@ -243,9 +246,9 @@ class SettingsViewModel : ViewModel() {
             settingsRepository.enablePredictiveBack =
                 json.optBoolean("enable_predictive_back", settingsRepository.enablePredictiveBack)
             loadSettings()
-            setBackupMessage("配置已导入")
+            setBackupMessage(FVoiceApplication.instance.getString(R.string.config_imported))
         }.onFailure {
-            setBackupMessage("导入失败：${it.message ?: "未知错误"}")
+            setBackupMessage(FVoiceApplication.instance.getString(R.string.config_import_failed, it.message ?: FVoiceApplication.instance.getString(R.string.error_unknown)))
         }
     }
 

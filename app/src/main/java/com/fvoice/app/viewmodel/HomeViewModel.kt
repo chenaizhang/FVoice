@@ -2,6 +2,8 @@ package com.fvoice.app.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fvoice.app.FVoiceApplication
+import com.fvoice.app.R
 import com.fvoice.app.core.model.ProcessTaskStatus
 import com.fvoice.app.core.task.ProcessTaskManager
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +15,7 @@ import kotlinx.coroutines.flow.onEach
 data class RecentTask(
     val id: String,
     val fileName: String,
-    val type: String,
+    val isRealtime: Boolean,
     val duration: String,
     val status: ProcessTaskStatus,
     val processType: String,
@@ -62,8 +64,8 @@ class HomeViewModel : ViewModel() {
         val items = all.take(3).map { task ->
             RecentTask(
                 id = task.id,
-                fileName = task.sourceFileName.ifBlank { "Unknown" },
-                type = if (task.isRealtime) "实时" else "文件",
+                fileName = task.sourceFileName.ifBlank { FVoiceApplication.instance.getString(R.string.result_unknown_file) },
+                isRealtime = task.isRealtime,
                 duration = "",
                 status = task.status,
                 processType = task.type.name.lowercase().replaceFirstChar { it.uppercase() },

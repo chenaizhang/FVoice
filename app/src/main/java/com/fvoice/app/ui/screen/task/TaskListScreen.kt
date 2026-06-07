@@ -126,6 +126,22 @@ fun TaskListScreen(
         }
     }
 
+    val denoiseLabel = stringResource(R.string.task_type_denoise)
+    val transcribeLabel = stringResource(R.string.task_type_transcribe)
+    val denoiseTranscribeLabel = stringResource(R.string.task_type_denoise_and_transcribe)
+    val extractAudioLabel = stringResource(R.string.task_type_extract_audio)
+    val realtimeRecordLabel = stringResource(R.string.task_type_realtime_record)
+    val realtimeTranscribeLabel = stringResource(R.string.task_type_realtime_transcribe)
+    val processModeLabels = mapOf(
+        ProcessTaskType.DENOISE.labelKey to denoiseLabel,
+        ProcessTaskType.TRANSCRIBE.labelKey to transcribeLabel,
+        ProcessTaskType.DENOISE_AND_TRANSCRIBE.labelKey to denoiseTranscribeLabel,
+        ProcessTaskType.EXTRACT_AUDIO.labelKey to extractAudioLabel,
+        ProcessTaskType.REALTIME_RECORD.labelKey to realtimeRecordLabel,
+        ProcessTaskType.REALTIME_TRANSCRIBE.labelKey to realtimeTranscribeLabel,
+    )
+    fun processModeLabelNonComposable(key: String): String = processModeLabels[key] ?: key
+
     val filteredTasks = uiState.tasks
         .sortedWith(
             compareBy<TaskItem> {
@@ -144,7 +160,7 @@ fun TaskListScreen(
             }
             val matchesSearch = uiState.searchQuery.isBlank() ||
                     task.fileName.contains(uiState.searchQuery, ignoreCase = true) ||
-                    processModeLabel(task.processMode).contains(uiState.searchQuery, ignoreCase = true)
+                    processModeLabelNonComposable(task.processMode).contains(uiState.searchQuery, ignoreCase = true)
             matchesFilter && matchesSearch
         }
 
@@ -345,7 +361,7 @@ private fun TaskListMiuix(
                                     title = task.fileName,
                                     description = processModeLabel(task.processMode),
                                     timestamp = taskCompletionText(task),
-                                    tags = listOf(task.type),
+                                    tags = listOf(taskTypeTag(task.isRealtime)),
                                     status = taskStatusLabel(task.status),
                                     statusColor = taskStatusColorMiuix(task.status),
                                     onClick = { onTaskClick(task.id) },
@@ -390,7 +406,7 @@ private fun TaskListMiuix(
                                 title = task.fileName,
                                 description = processModeLabel(task.processMode),
                                 timestamp = taskCompletionText(task),
-                                tags = listOf(task.type),
+                                tags = listOf(taskTypeTag(task.isRealtime)),
                                 status = taskStatusLabel(task.status),
                                 statusColor = taskStatusColorMiuix(task.status),
                                 onClick = { onTaskClick(task.id) },
@@ -505,7 +521,7 @@ private fun TaskListMaterial(
                                         title = task.fileName,
                                         description = processModeLabel(task.processMode),
                                         timestamp = taskCompletionText(task),
-                                        tags = listOf(task.type),
+                                        tags = listOf(taskTypeTag(task.isRealtime)),
                                         status = taskStatusLabel(task.status),
                                         statusColor = taskStatusColorMaterial(task.status),
                                         onClick = { onTaskClick(task.id) },
@@ -546,7 +562,7 @@ private fun TaskListMaterial(
                                 title = task.fileName,
                                 description = processModeLabel(task.processMode),
                                 timestamp = taskCompletionText(task),
-                                tags = listOf(task.type),
+                                tags = listOf(taskTypeTag(task.isRealtime)),
                                 status = taskStatusLabel(task.status),
                                 statusColor = taskStatusColorMaterial(task.status),
                                 onClick = { onTaskClick(task.id) },
@@ -623,14 +639,22 @@ private fun formatCompletedAt(millis: Long): String {
     return SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date(millis))
 }
 
+private val taskTypeLabelKeys = mapOf(
+    ProcessTaskType.DENOISE.labelKey to R.string.task_type_denoise,
+    ProcessTaskType.TRANSCRIBE.labelKey to R.string.task_type_transcribe,
+    ProcessTaskType.DENOISE_AND_TRANSCRIBE.labelKey to R.string.task_type_denoise_and_transcribe,
+    ProcessTaskType.EXTRACT_AUDIO.labelKey to R.string.task_type_extract_audio,
+    ProcessTaskType.REALTIME_RECORD.labelKey to R.string.task_type_realtime_record,
+    ProcessTaskType.REALTIME_TRANSCRIBE.labelKey to R.string.task_type_realtime_transcribe,
+)
+
+@Composable
 private fun processModeLabel(key: String): String {
-    return when (key) {
-        ProcessTaskType.DENOISE.labelKey -> "降噪"
-        ProcessTaskType.TRANSCRIBE.labelKey -> "转写"
-        ProcessTaskType.DENOISE_AND_TRANSCRIBE.labelKey -> "降噪并转写"
-        ProcessTaskType.EXTRACT_AUDIO.labelKey -> "提取音频"
-        ProcessTaskType.REALTIME_RECORD.labelKey -> "实时录音"
-        ProcessTaskType.REALTIME_TRANSCRIBE.labelKey -> "实时转写"
-        else -> key
-    }
+    val resId = taskTypeLabelKeys[key] ?: return key
+    return stringResource(resId)
+}
+
+@Composable
+private fun taskTypeTag(isRealtime: Boolean): String {
+    return if (isRealtime) stringResource(R.string.task_type_realtime) else stringResource(R.string.task_type_file)
 }

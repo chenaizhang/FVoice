@@ -111,15 +111,41 @@ import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.extended.Back
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 
-private enum class ModelChoice(val label: String) {
-    DEFAULT("默认"),
-    CUSTOM("自定义")
+private enum class ModelChoice {
+    DEFAULT, CUSTOM
 }
 
-private enum class TranscribeLanguage(val label: String, val value: String) {
-    CHINESE("中文", "zh"),
-    ENGLISH("英文", "en"),
-    MIXED("中英混合", "auto")
+private enum class TranscribeLanguage(val value: String) {
+    CHINESE("zh"),
+    ENGLISH("en"),
+    MIXED("auto")
+}
+
+@Composable
+private fun ProcessMode.label(): String = when (this) {
+    ProcessMode.DENOISE_AND_TRANSCRIBE -> stringResource(R.string.process_mode_denoise_and_transcribe)
+    ProcessMode.DENOISE_ONLY -> stringResource(R.string.process_mode_denoise_only)
+    ProcessMode.TRANSCRIBE_ONLY -> stringResource(R.string.process_mode_transcribe_only)
+}
+
+@Composable
+private fun DenoiseStrength.label(): String = when (this) {
+    DenoiseStrength.STANDARD -> stringResource(R.string.denoise_strength_standard)
+    DenoiseStrength.STRONG -> stringResource(R.string.denoise_strength_strong)
+    DenoiseStrength.CUSTOM -> stringResource(R.string.denoise_strength_custom)
+}
+
+@Composable
+private fun ModelChoice.label(): String = when (this) {
+    ModelChoice.DEFAULT -> stringResource(R.string.model_choice_default)
+    ModelChoice.CUSTOM -> stringResource(R.string.model_choice_custom)
+}
+
+@Composable
+private fun TranscribeLanguage.label(): String = when (this) {
+    TranscribeLanguage.CHINESE -> stringResource(R.string.language_chinese)
+    TranscribeLanguage.ENGLISH -> stringResource(R.string.language_english)
+    TranscribeLanguage.MIXED -> stringResource(R.string.language_chinese_english)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -210,7 +236,7 @@ fun ProcessSettingsScreen(
                 FVoiceMiuixCard {
                     ProcessMode.entries.forEach { mode ->
                         ProcessModeMiuixRow(
-                            title = mode.label,
+                            title = mode.label(),
                             selected = selectedMode == mode,
                             onClick = { selectedMode = mode }
                         )
@@ -221,7 +247,7 @@ fun ProcessSettingsScreen(
                 item { FVoiceMiuixTitle(stringResource(R.string.denoise_strength), Modifier.padding(top = 12.dp)) }
                 item {
                     FVoiceMiuixSegmentedControl(
-                        options = DenoiseStrength.entries.map { it.label },
+                        options = DenoiseStrength.entries.map { it.label() },
                         selectedIndex = DenoiseStrength.entries.indexOf(selectedStrength).coerceAtLeast(0),
                         onSelected = { selectedStrength = DenoiseStrength.entries[it] },
                         modifier = Modifier.padding(top = 8.dp)
@@ -230,7 +256,7 @@ fun ProcessSettingsScreen(
                 if (selectedStrength == DenoiseStrength.CUSTOM && customDenoiseModels.isNotEmpty()) {
                     item {
                         MiuixDropdownPreference(
-                            title = "降噪模型",
+                            title = stringResource(R.string.denoise_model_label),
                             selected = selectedCustomDenoiseModel?.id.orEmpty(),
                             options = customDenoiseModels.map { SettingOption(it.id, it.name) },
                             onSelected = { selectedCustomDenoiseModelId = it }
@@ -244,10 +270,10 @@ fun ProcessSettingsScreen(
                 }
             }
             if (selectedMode.needsTranscribe()) {
-                item { FVoiceMiuixTitle("转写模型", Modifier.padding(top = 12.dp)) }
+                item { FVoiceMiuixTitle(stringResource(R.string.transcribe_model_label), Modifier.padding(top = 12.dp)) }
                 item {
                     FVoiceMiuixSegmentedControl(
-                        options = ModelChoice.entries.map { it.label },
+                        options = ModelChoice.entries.map { it.label() },
                         selectedIndex = ModelChoice.entries.indexOf(asrChoice),
                         onSelected = { asrChoice = ModelChoice.entries[it] },
                         modifier = Modifier.padding(top = 8.dp)
@@ -262,10 +288,10 @@ fun ProcessSettingsScreen(
                         )
                     }
                 }
-                item { FVoiceMiuixTitle("转写语言", Modifier.padding(top = 12.dp)) }
+                item { FVoiceMiuixTitle(stringResource(R.string.transcribe_language_label), Modifier.padding(top = 12.dp)) }
                 item {
                     FVoiceMiuixSegmentedControl(
-                        options = TranscribeLanguage.entries.map { it.label },
+                        options = TranscribeLanguage.entries.map { it.label() },
                         selectedIndex = TranscribeLanguage.entries.indexOf(selectedLanguage),
                         onSelected = { selectedLanguage = TranscribeLanguage.entries[it] },
                         modifier = Modifier.padding(top = 8.dp)
@@ -324,7 +350,7 @@ fun ProcessSettingsScreen(
                 Column(modifier = Modifier.padding(8.dp)) {
                     ProcessMode.entries.forEach { mode ->
                         ProcessModeMaterialRow(
-                            title = mode.label,
+                            title = mode.label(),
                             selected = selectedMode == mode,
                             onClick = { selectedMode = mode }
                         )
@@ -339,13 +365,13 @@ fun ProcessSettingsScreen(
                     fontWeight = FontWeight.SemiBold
                 )
                 FilterChipRow(
-                    labels = DenoiseStrength.entries.map { it.label },
+                    labels = DenoiseStrength.entries.map { it.label() },
                     selectedIndex = DenoiseStrength.entries.indexOf(selectedStrength),
                     onSelected = { selectedStrength = DenoiseStrength.entries[it] }
                 )
                 if (selectedStrength == DenoiseStrength.CUSTOM && customDenoiseModels.isNotEmpty()) {
                     MaterialDropdownPreference(
-                        title = "降噪模型",
+                        title = stringResource(R.string.denoise_model_label),
                         selected = selectedCustomDenoiseModel?.id.orEmpty(),
                         options = customDenoiseModels.map { SettingOption(it.id, it.name) },
                         onSelected = { selectedCustomDenoiseModelId = it }
@@ -358,12 +384,12 @@ fun ProcessSettingsScreen(
 
             if (selectedMode.needsTranscribe()) {
                 Text(
-                    text = "转写模型",
+                    text = stringResource(R.string.transcribe_model_label),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold
                 )
                 FilterChipRow(
-                    labels = ModelChoice.entries.map { it.label },
+                    labels = ModelChoice.entries.map { it.label() },
                     selectedIndex = ModelChoice.entries.indexOf(asrChoice),
                     onSelected = { asrChoice = ModelChoice.entries[it] }
                 )
@@ -375,12 +401,12 @@ fun ProcessSettingsScreen(
                     )
                 }
                 Text(
-                    text = "转写语言",
+                    text = stringResource(R.string.transcribe_language_label),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.SemiBold
                 )
                 FilterChipRow(
-                    labels = TranscribeLanguage.entries.map { it.label },
+                    labels = TranscribeLanguage.entries.map { it.label() },
                     selectedIndex = TranscribeLanguage.entries.indexOf(selectedLanguage),
                     onSelected = { selectedLanguage = TranscribeLanguage.entries[it] }
                 )
@@ -567,12 +593,12 @@ internal fun AudioPlayerPreview(
             }
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "音频预览",
+                    text = stringResource(R.string.audio_preview_label),
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.SemiBold
                 )
                 Text(
-                    text = fileName.ifBlank { "Unknown" },
+                    text = fileName.ifBlank { stringResource(R.string.result_unknown_file) },
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -633,13 +659,13 @@ internal fun AudioPlayerPreviewMiuix(
             }
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = "音频预览",
+                    text = stringResource(R.string.audio_preview_label),
                     style = MaterialTheme.typography.titleSmall,
                     fontWeight = FontWeight.SemiBold,
                     color = MiuixTheme.colorScheme.onSurface
                 )
                 Text(
-                    text = fileName.ifBlank { "Unknown" },
+                    text = fileName.ifBlank { stringResource(R.string.result_unknown_file) },
                     color = MiuixTheme.colorScheme.onSurfaceVariantSummary,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -738,7 +764,7 @@ internal fun PlayerControlsOverlay(
             ) {
                 Icon(
                     imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
-                    contentDescription = if (isPlaying) "暂停" else "播放",
+                    contentDescription = if (isPlaying) stringResource(R.string.player_pause) else stringResource(R.string.player_play),
                     tint = Color.White
                 )
             }
@@ -773,7 +799,7 @@ internal fun PlayerControlsOverlay(
             IconButton(onClick = onFullscreenChange) {
                 Icon(
                     imageVector = if (fullscreen) Icons.Default.FullscreenExit else Icons.Default.Fullscreen,
-                    contentDescription = if (fullscreen) "退出全屏" else "全屏",
+                    contentDescription = if (fullscreen) stringResource(R.string.player_exit_fullscreen) else stringResource(R.string.player_fullscreen),
                     tint = Color.White
                 )
             }
@@ -835,7 +861,7 @@ internal fun AudioControls(
             ) {
                 Icon(
                     imageVector = if (isPlaying) Icons.Default.Pause else Icons.Default.PlayArrow,
-                    contentDescription = if (isPlaying) "暂停" else "播放",
+                    contentDescription = if (isPlaying) stringResource(R.string.player_pause) else stringResource(R.string.player_play),
                     tint = iconTint
                 )
             }
@@ -958,7 +984,7 @@ private fun FileInfoContentMaterial(
 ) {
     Column(modifier = Modifier.padding(14.dp)) {
         Text(
-            text = fileName.ifBlank { "Unknown" },
+            text = fileName.ifBlank { stringResource(R.string.result_unknown_file) },
             modifier = Modifier.basicMarquee(),
             maxLines = 1,
             style = MaterialTheme.typography.bodyLarge,
@@ -970,7 +996,7 @@ private fun FileInfoContentMaterial(
 @Composable
 private fun FileNameMiuix(fileName: String) {
     MiuixText(
-        text = fileName.ifBlank { "Unknown" },
+        text = fileName.ifBlank { stringResource(R.string.result_unknown_file) },
         modifier = Modifier.basicMarquee(),
         fontWeight = FontWeight.SemiBold,
         maxLines = 1
@@ -1139,36 +1165,40 @@ private fun List<ModelInfo>.modelForStrength(strength: DenoiseStrength): ModelIn
     }
 }
 
+@Composable
 private fun denoiseDescription(
     strength: DenoiseStrength,
     model: ModelInfo?,
     customMissing: Boolean
 ): String {
-    return "实际模型：${model?.name ?: "暂无可用降噪模型"}"
+    val modelName = model?.name ?: stringResource(R.string.denoise_no_model)
+    return stringResource(R.string.denoise_description_format, modelName)
 }
 
+@Composable
 private fun asrDescription(
     choice: ModelChoice,
     model: ModelInfo?,
     customMissing: Boolean
 ): String {
-    val choiceText = when (choice) {
-        ModelChoice.DEFAULT -> "默认：使用当前默认转写模型。"
+    val modelName = model?.name ?: stringResource(R.string.asr_no_model)
+    return when (choice) {
+        ModelChoice.DEFAULT -> stringResource(R.string.asr_default_description, modelName)
         ModelChoice.CUSTOM -> if (customMissing) {
-            "自定义：未找到已导入的自定义转写模型，暂时使用默认模型。"
+            stringResource(R.string.asr_custom_missing_description, modelName)
         } else {
-            "自定义：使用你导入的转写模型。"
+            stringResource(R.string.asr_custom_description, modelName)
         }
     }
-    return "$choiceText 实际使用模型：${model?.name ?: "暂无可用转写模型"}。"
 }
 
 private fun queryFileEditedLabel(context: Context, uri: Uri): String {
     val millis = queryMediaTime(context, uri)
     return if (millis > 0L) {
-        "编辑时间：${SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date(millis))}"
+        val timeStr = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(Date(millis))
+        context.getString(R.string.file_edit_time, timeStr)
     } else {
-        "编辑时间：未知"
+        context.getString(R.string.file_edit_time_unknown)
     }
 }
 

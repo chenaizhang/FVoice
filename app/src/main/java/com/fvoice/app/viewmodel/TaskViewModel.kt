@@ -12,11 +12,12 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import com.fvoice.app.FVoiceApplication
+import com.fvoice.app.R
 
 data class TaskItem(
     val id: String,
     val fileName: String,
-    val type: String,
+    val isRealtime: Boolean,
     val processMode: String,
     val duration: String,
     val status: ProcessTaskStatus,
@@ -71,8 +72,8 @@ class TaskViewModel : ViewModel() {
         val items = all.map { task ->
             TaskItem(
                 id = task.id,
-                fileName = task.sourceFileName.ifBlank { "Unknown" },
-                type = if (task.isRealtime) "实时" else "文件",
+                fileName = task.sourceFileName.ifBlank { FVoiceApplication.instance.getString(R.string.result_unknown_file) },
+                isRealtime = task.isRealtime,
                 processMode = task.type.labelKey,
                 duration = "",
                 status = task.status,

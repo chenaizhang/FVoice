@@ -3,21 +3,21 @@ package com.fvoice.app.ui.theme
 import androidx.compose.ui.graphics.Color
 
 val keyColorOptions = listOf(
-    0xFFF44336.toInt() to "红",
-    0xFFE91E63.toInt() to "粉",
-    0xFF9C27B0.toInt() to "紫",
-    0xFF673AB7.toInt() to "深紫",
-    0xFF3F51B5.toInt() to "靛蓝",
-    0xFF2196F3.toInt() to "蓝",
-    0xFF00BCD4.toInt() to "浅蓝",
-    0xFF009688.toInt() to "青",
-    0xFF4CAF50.toInt() to "绿",
-    0xFFFFEB3B.toInt() to "黄",
-    0xFFFFC107.toInt() to "琥珀",
-    0xFFFF9800.toInt() to "橙",
-    0xFF795548.toInt() to "棕",
-    0xFF607D8B.toInt() to "蓝灰",
-    0xFFFF9CA8.toInt() to "樱",
+    0xFFF44336.toInt() to "Red",
+    0xFFE91E63.toInt() to "Pink",
+    0xFF9C27B0.toInt() to "Purple",
+    0xFF673AB7.toInt() to "Deep Purple",
+    0xFF3F51B5.toInt() to "Indigo",
+    0xFF2196F3.toInt() to "Blue",
+    0xFF00BCD4.toInt() to "Cyan",
+    0xFF009688.toInt() to "Teal",
+    0xFF4CAF50.toInt() to "Green",
+    0xFFFFEB3B.toInt() to "Yellow",
+    0xFFFFC107.toInt() to "Amber",
+    0xFFFF9800.toInt() to "Orange",
+    0xFF795548.toInt() to "Brown",
+    0xFF607D8B.toInt() to "Blue Grey",
+    0xFFFF9CA8.toInt() to "Sakura",
 )
 
 val Purple80 = Color(0xFFD0BCFF)

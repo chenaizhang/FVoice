@@ -93,11 +93,11 @@ fun ModelManagerScreen(
             tempFile.delete()
             Toast.makeText(
                 context,
-                if (success) "导入成功" else "导入失败",
+                if (success) context.getString(R.string.model_import_success) else context.getString(R.string.model_import_failed_simple),
                 Toast.LENGTH_SHORT
             ).show()
         } catch (e: Exception) {
-            Toast.makeText(context, "导入失败: ${e.message}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.model_import_failed, e.message ?: ""), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -132,7 +132,7 @@ fun ModelManagerScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(modelManagerTitle(category)) },
+                title = { Text(stringResource(modelManagerTitleRes(category))) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
@@ -152,7 +152,7 @@ fun ModelManagerScreen(
             ModelDownloadGuideCard(category)
 
             Text(
-                text = "已安装${modelCategoryName(category)}",
+                text = stringResource(R.string.model_installed, modelCategoryName(category)),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold
             )
@@ -160,7 +160,7 @@ fun ModelManagerScreen(
             if (filteredModels.isEmpty()) {
                 Card(modifier = Modifier.fillMaxWidth()) {
                     Text(
-                        text = "暂无${modelCategoryName(category)}，请在下方导入",
+                        text = stringResource(R.string.model_empty, modelCategoryName(category)),
                         modifier = Modifier.padding(16.dp)
                     )
                 }
@@ -178,7 +178,7 @@ fun ModelManagerScreen(
             Spacer(modifier = Modifier.padding(top = 8.dp))
 
             Text(
-                text = "导入${modelCategoryName(category)}",
+                text = stringResource(R.string.model_import_title, modelCategoryName(category)),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.SemiBold
             )
@@ -206,7 +206,7 @@ private fun ModelManagerMiuix(
     onImport: (ModelType) -> Unit
 ) {
     FVoiceMiuixPage(
-        title = modelManagerTitle(category),
+        title = stringResource(modelManagerTitleRes(category)),
         navigationIcon = {
             MiuixIconButton(onClick = onBack) {
                 MiuixIcon(MiuixIcons.Back, contentDescription = null)
@@ -219,7 +219,7 @@ private fun ModelManagerMiuix(
 
         item {
             MiuixText(
-                text = "已安装${modelCategoryName(category)}",
+                text = stringResource(R.string.model_installed, modelCategoryName(category)),
                 fontSize = 14.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = MiuixTheme.colorScheme.onSurfaceVariantSummary,
@@ -230,7 +230,7 @@ private fun ModelManagerMiuix(
         if (models.isEmpty()) {
             item {
                 FVoiceMiuixCard {
-                    MiuixText("暂无${modelCategoryName(category)}，请在下方导入")
+                    MiuixText(stringResource(R.string.model_empty, modelCategoryName(category)))
                 }
             }
         } else {
@@ -247,7 +247,7 @@ private fun ModelManagerMiuix(
 
         item {
             MiuixText(
-                text = "导入${modelCategoryName(category)}",
+                text = stringResource(R.string.model_import_title, modelCategoryName(category)),
                 fontSize = 14.sp,
                 fontWeight = FontWeight.SemiBold,
                 color = MiuixTheme.colorScheme.onSurfaceVariantSummary,
@@ -292,7 +292,7 @@ private fun ModelCardMiuix(
                     )
                     if (model.isBundled) {
                         MiuixText(
-                            text = "内置模型（不可删除）",
+                            text = stringResource(R.string.model_bundled),
                             fontSize = 12.sp,
                             color = MiuixTheme.colorScheme.primary
                         )
@@ -300,7 +300,7 @@ private fun ModelCardMiuix(
                 }
                 if (isCurrentAsr) {
                     MiuixText(
-                        text = "当前",
+                        text = stringResource(R.string.model_current),
                         color = MiuixTheme.colorScheme.primary,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -318,14 +318,14 @@ private fun ModelCardMiuix(
                             onClick = onSetCurrentAsr,
                             modifier = Modifier.weight(1f)
                         ) {
-                            MiuixText("设为当前")
+                            MiuixText(stringResource(R.string.model_set_as_current))
                         }
                     }
                     MiuixButton(
                         onClick = onDelete,
                         modifier = Modifier.weight(1f)
                     ) {
-                        MiuixText("删除")
+                        MiuixText(stringResource(R.string.model_delete))
                     }
                 }
             }
@@ -360,7 +360,7 @@ private fun ModelCardMaterial(
                     )
                     if (model.isBundled) {
                         Text(
-                            text = "内置模型（不可删除）",
+                            text = stringResource(R.string.model_bundled),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.primary
                         )
@@ -368,7 +368,7 @@ private fun ModelCardMaterial(
                 }
                 if (isCurrentAsr) {
                     Text(
-                        text = "当前",
+                        text = stringResource(R.string.model_current),
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -386,14 +386,14 @@ private fun ModelCardMaterial(
                             onClick = onSetCurrentAsr,
                             modifier = Modifier.weight(1f)
                         ) {
-                            Text("设为当前")
+                            Text(stringResource(R.string.model_set_as_current))
                         }
                     }
                     OutlinedButton(
                         onClick = onDelete,
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text("删除")
+                        Text(stringResource(R.string.model_delete))
                     }
                 }
             }
@@ -453,7 +453,7 @@ private fun ImportButtonsMaterial(category: String, onImport: (ModelType) -> Uni
             onClick = { onImport(option.type) },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(option.label)
+            Text(stringResource(option.labelRes))
         }
     }
 }
@@ -465,7 +465,7 @@ private fun ImportButtonsMiuix(category: String, onImport: (ModelType) -> Unit) 
             onClick = { onImport(option.type) },
             modifier = Modifier.fillMaxWidth()
         ) {
-            MiuixText(option.label)
+            MiuixText(stringResource(option.labelRes))
         }
     }
 }
@@ -475,7 +475,7 @@ private const val MODEL_CATEGORY_TRANSCRIBE = "transcribe"
 
 private data class ImportOption(
     val type: ModelType,
-    val label: String
+    val labelRes: Int
 )
 
 private fun List<ModelInfo>.filterForCategory(category: String): List<ModelInfo> {
@@ -494,18 +494,15 @@ private fun List<ModelInfo>.filterForCategory(category: String): List<ModelInfo>
     }
 }
 
-private fun modelManagerTitle(category: String): String {
-    return when (category) {
-        MODEL_CATEGORY_DENOISE -> "降噪模型"
-        else -> "转文字模型"
-    }
+private fun modelManagerTitleRes(category: String): Int = when (category) {
+    MODEL_CATEGORY_DENOISE -> R.string.model_denoise_category
+    else -> R.string.model_transcribe_category
 }
 
-private fun modelCategoryName(category: String): String {
-    return when (category) {
-        MODEL_CATEGORY_DENOISE -> "降噪模型"
-        else -> "转文字模型"
-    }
+@Composable
+private fun modelCategoryName(category: String): String = when (category) {
+    MODEL_CATEGORY_DENOISE -> stringResource(R.string.model_denoise_category)
+    else -> stringResource(R.string.model_transcribe_category)
 }
 
 private fun modelGuideLines(category: String): List<Int> {
@@ -518,11 +515,12 @@ private fun modelGuideLines(category: String): List<Int> {
     }
 }
 
+@Composable
 private fun modelMetadataText(model: ModelInfo): String {
     val sizeText = if (model.type == ModelType.DENOISE_RNNOISE && model.isBundled) {
-        "内置 native"
+        stringResource(R.string.model_builtin_native)
     } else {
-        formatSize(model.sizeBytes)
+        formatSize(model.sizeBytes, stringResource(R.string.model_not_installed))
     }
     val versionText = model.version.takeIf { it.isNotBlank() } ?: "-"
     return "$versionText | ${model.type.name} | ${model.status.name} | $sizeText"
@@ -531,17 +529,17 @@ private fun modelMetadataText(model: ModelInfo): String {
 private fun importOptionsForCategory(category: String): List<ImportOption> {
     return when (category) {
         MODEL_CATEGORY_DENOISE -> listOf(
-            ImportOption(ModelType.DENOISE_DEEPFILTERNET, "导入降噪模型")
+            ImportOption(ModelType.DENOISE_DEEPFILTERNET, R.string.model_import_denoise)
         )
         else -> listOf(
-            ImportOption(ModelType.ASR_WHISPER_BASE, "导入 Whisper 模型 (.bin)"),
-            ImportOption(ModelType.VAD_SILERO, "导入 VAD 模型 (.onnx)")
+            ImportOption(ModelType.ASR_WHISPER_BASE, R.string.model_import_whisper),
+            ImportOption(ModelType.VAD_SILERO, R.string.model_import_vad)
         )
     }
 }
 
-private fun formatSize(bytes: Long): String {
-    if (bytes <= 0) return "未安装"
+private fun formatSize(bytes: Long, notInstalled: String): String {
+    if (bytes <= 0) return notInstalled
     return when {
         bytes >= 1024 * 1024 * 1024 -> String.format("%.2f GB", bytes / (1024.0 * 1024.0 * 1024.0))
         bytes >= 1024 * 1024 -> String.format("%.2f MB", bytes / (1024.0 * 1024.0))
