@@ -117,7 +117,7 @@ dependencies {
     implementation(libs.opencc4j)
 
     // ONNX Runtime for SileroVAD
-    implementation("com.microsoft.onnxruntime:onnxruntime-android:1.18.0")
+    implementation("com.microsoft.onnxruntime:onnxruntime-android:1.26.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
