@@ -1,0 +1,6 @@
+# RNNoise — third-party C library, exclude from language stats
+app/src/main/cpp/rnnoise/** linguist-vendored
+
+# Large model weight files — treat as binary, exclude from language stats
+app/src/main/cpp/rnnoise/src/rnnoise_data.c linguist-generated
+app/src/main/cpp/rnnoise/src/rnnoise_tables.c linguist-generated
