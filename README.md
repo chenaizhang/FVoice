@@ -35,6 +35,31 @@
 | **任务队列** | 单任务串行处理，前台服务保活，支持取消与异常恢复 |
 | **双主题** | Miuix 与 Material3 双风格，悬浮底栏、液态玻璃、预测性返回，支持 Monet 取色与深度自定义 |
 
+## 截图
+
+<table>
+  <tr>
+    <td><img src="assets/001_home.webp" width="300" alt="首页"/></td>
+    <td><img src="assets/002_task.webp" width="300" alt="任务页"/></td>
+    <td><img src="assets/003_processing.webp" width="300" alt="正在处理"/></td>
+  </tr>
+  <tr>
+    <td align="center">首页</td>
+    <td align="center">任务队列</td>
+    <td align="center">处理中</td>
+  </tr>
+  <tr>
+    <td><img src="assets/004_result.webp" width="300" alt="结果页"/></td>
+    <td><img src="assets/005_process_settings.webp" width="300" alt="处理设置"/></td>
+    <td><img src="assets/006_settings.webp" width="300" alt="设置"/></td>
+  </tr>
+  <tr>
+    <td align="center">转写结果</td>
+    <td align="center">处理设置</td>
+    <td align="center">设置</td>
+  </tr>
+</table>
+
 ## 运行要求
 
 | 项目 | 要求 |

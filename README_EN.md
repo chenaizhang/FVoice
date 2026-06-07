@@ -35,6 +35,31 @@ Clean noise, keep voice. All processing runs on-device by default — no cloud u
 | **Task Queue** | Single-task queue with foreground service, cancellation and crash recovery |
 | **Dual Theme** | Miuix and Material3 styles with floating bottom bar, blur effects, predictive back, Monet color extraction and deep customization |
 
+## Screenshots
+
+<table>
+  <tr>
+    <td><img src="assets/001_home_en.webp" width="300" alt="Home"/></td>
+    <td><img src="assets/002_task_en.webp" width="300" alt="Task List"/></td>
+    <td><img src="assets/003_processing_en.webp" width="300" alt="Processing"/></td>
+  </tr>
+  <tr>
+    <td align="center">Home</td>
+    <td align="center">Task Queue</td>
+    <td align="center">Processing</td>
+  </tr>
+  <tr>
+    <td><img src="assets/004_result_en.webp" width="300" alt="Result"/></td>
+    <td><img src="assets/005_process_settings_en.webp" width="300" alt="Process Settings"/></td>
+    <td><img src="assets/006_settings_en.webp" width="300" alt="Settings"/></td>
+  </tr>
+  <tr>
+    <td align="center">Transcription Result</td>
+    <td align="center">Process Settings</td>
+    <td align="center">Settings</td>
+  </tr>
+</table>
+
 ## Requirements
 
 | Item | Requirement |
